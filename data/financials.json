@@ -1,0 +1,15 @@
+{"ticker":"RKLB","exchange":"NASDAQ","ipo_date":"2021-08-25","ipo_price":10.00,
+"segments":["Launch Services","Space Systems"],
+"annual":[
+  {"year":2020,"revenue":34.6,"gross_profit":-2.1,"net_loss":-56.2},
+  {"year":2021,"revenue":62.2,"gross_profit":4.1,"net_loss":-117.0},
+  {"year":2022,"revenue":211.0,"gross_profit":24.0,"net_loss":-271.0},
+  {"year":2023,"revenue":244.9,"gross_profit":36.6,"net_loss":-183.7},
+  {"year":2024,"revenue":436.2,"gross_profit":89.4,"net_loss":-197.0}
+],
+"key_metrics":{
+  "backlog_2024":1080,
+  "employees_2024":2100,
+  "neutron_target":"2025",
+  "launch_cadence_2024":16
+}}

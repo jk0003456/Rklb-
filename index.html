@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Rocket Lab Archive — 모자이크 이론</title>
+<link rel="stylesheet" href="style.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">🚀 <span>RKLB</span> Archive</div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showTab('overview')">개요</button>
+    <button class="nav-tab" onclick="showTab('launches')">발사 아카이브</button>
+    <button class="nav-tab" onclick="showTab('financial')">재무</button>
+    <button class="nav-tab" onclick="showTab('mosaic')">모자이크 분석</button>
+  </div>
+</nav>
+
+<div class="hero">
+  <h1>Rocket <span>Lab</span> Archive</h1>
+  <p>모자이크 이론(Mosaic Theory) 적용 — 공개 정보 집약을 통한 로켓랩 심층 분석</p>
+</div>
+
+<div class="stats-bar" id="stats-bar">
+  <div class="stat"><div class="stat-val" id="s-total">—</div><div class="stat-lbl">총 발사</div></div>
+  <div class="stat"><div class="stat-val" id="s-suc">—</div><div class="stat-lbl">성공</div></div>
+  <div class="stat"><div class="stat-val" id="s-rate" style="color:var(--suc)">—</div><div class="stat-lbl">성공률</div></div>
+  <div class="stat"><div class="stat-val" id="s-rev" style="color:var(--acc2)">—</div><div class="stat-lbl">2024 매출</div></div>
+  <div class="stat"><div class="stat-val" id="s-backlog" style="color:var(--neu)">—</div><div class="stat-lbl">수주잔고</div></div>
+</div>
+
+<!-- OVERVIEW -->
+<section id="tab-overview" class="active">
+  <div class="chart-grid">
+    <div class="chart-card">
+      <div class="chart-title">연도별 발사 현황</div>
+      <div class="bar-chart" id="launch-by-year"></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">주요 고객 분포</div>
+      <div class="bar-chart" id="customer-dist"></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">연도별 매출 추이 ($M)</div>
+      <div class="bar-chart" id="rev-chart"></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">최근 10회 발사 타임라인</div>
+      <div class="timeline" id="recent-timeline"></div>
+    </div>
+  </div>
+</section>
+
+<!-- LAUNCHES -->
+<section id="tab-launches">
+  <div class="filters">
+    <input class="search-box" id="search" placeholder="미션명, 고객, 페이로드 검색..." oninput="filterLaunches()">
+    <button class="filter-btn active" onclick="setFilter('all',this)">전체</button>
+    <button class="filter-btn" onclick="setFilter('success',this)">성공</button>
+    <button class="filter-btn" onclick="setFilter('failure',this)">실패</button>
+    <button class="filter-btn" onclick="setFilter('NZ',this)">뉴질랜드</button>
+    <button class="filter-btn" onclick="setFilter('VA',this)">버지니아</button>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th><th>미션명</th><th>날짜</th><th>결과</th>
+          <th>궤도</th><th>페이로드</th><th>고객</th><th>비고</th>
+        </tr>
+      </thead>
+      <tbody id="launch-tbody"></tbody>
+    </table>
+  </div>
+  <div id="launch-count" style="text-align:right;color:var(--txt3);font-size:.78rem;margin-top:.5rem"></div>
+</section>
+
+<!-- FINANCIAL -->
+<section id="tab-financial">
+  <div class="fin-grid" id="fin-kpis"></div>
+  <div class="chart-grid">
+    <div class="chart-card">
+      <div class="chart-title">연도별 매출 ($M)</div>
+      <div class="bar-chart" id="fin-rev-chart"></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">매출총이익 ($M)</div>
+      <div class="bar-chart" id="fin-gp-chart"></div>
+    </div>
+  </div>
+  <div class="chart-card" style="margin-bottom:1rem">
+    <div class="chart-title">순손실 추이 — 흑자 전환 경로</div>
+    <div class="bar-chart" id="fin-nl-chart"></div>
+    <p style="font-size:.75rem;color:var(--txt3);margin-top:.75rem">* 순손실 절대값 표시. 매출 성장 대비 손실 안정화 추세 주목.</p>
+  </div>
+</section>
+
+<!-- MOSAIC -->
+<section id="tab-mosaic">
+  <div class="mosaic-header">
+    <div>
+      <h2 style="font-size:1.2rem;font-weight:700">모자이크 이론 분석</h2>
+      <p style="color:var(--txt2);font-size:.85rem;margin-top:.2rem">공개 정보 조각을 결합해 RKLB 투자 그림을 완성</p>
+    </div>
+    <div style="text-align:center">
+      <div class="score-badge" id="mosaic-score"></div>
+      <div style="font-size:.72rem;color:var(--txt3)">종합 점수 / 5</div>
+    </div>
+  </div>
+  <div class="signals-grid" id="signals-grid"></div>
+  <div class="verdict-box" id="verdict-box"></div>
+</section>
+
+<script src="app.js"></script>
+</body>
+</html>

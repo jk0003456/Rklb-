@@ -1,0 +1,12 @@
+{"signals":[
+  {"category":"수주잔고","signal":"$1.08B 백로그 (2024)", "weight":5,"trend":"up","source":"SEC 10-K","implication":"향후 2-3년 매출 가시성 확보"},
+  {"category":"발사 빈도","signal":"연 16회 (2024) — 전년 대비 +33%","weight":5,"trend":"up","source":"Mission Archive","implication":"운영 성숙도 및 수익성 개선 경로"},
+  {"category":"우주 시스템","signal":"공간 시스템 매출 비중 60% 돌파","weight":4,"trend":"up","source":"실적 발표","implication":"발사 의존도 탈피, 고마진 사업 확대"},
+  {"category":"Neutron 개발","signal":"2025년 첫 발사 목표 중형 로켓","weight":5,"trend":"neutral","source":"투자자 발표","implication":"성공 시 TAM 10× 확대, 실패 시 대규모 손실"},
+  {"category":"정부 계약","signal":"NRO, NASA, DoD 다수 계약","weight":4,"trend":"up","source":"계약 발표","implication":"안정적 기반 수요 및 기술 검증"},
+  {"category":"경쟁 환경","signal":"SpaceX Falcon 9 독점 약화 중","weight":3,"trend":"up","source":"산업 분석","implication":"소형 LEO 시장에서 RKLB 점유율 확대 가능"},
+  {"category":"자본 구조","signal":"현금 $487M (2024 Q3), 부채 $0","weight":4,"trend":"neutral","source":"재무제표","implication":"Neutron 개발 자금 자체 조달 가능"},
+  {"category":"M&A","signal":"Sinclair, ASI, PSC 인수 — 수직계열화","weight":4,"trend":"up","source":"공시","implication":"부품 내재화로 마진 개선 및 공급망 통제"},
+  {"category":"순손실","signal":"순손실 지속 (2024: -$197M)","weight":3,"trend":"neutral","source":"손익계산서","implication":"흑자 전환 시점이 밸류에이션 핵심 변수"},
+  {"category":"Peter Beck 리더십","signal":"창업자 CEO 지속 경영","weight":3,"trend":"up","source":"공시","implication":"비전 일관성, SpaceX식 기술 문화"}
+],"mosaic_score":4.0,"verdict":"중장기 성장 스토리는 유효하나 Neutron 실행 리스크가 핵심 변수"}
