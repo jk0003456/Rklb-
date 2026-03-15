@@ -1,120 +1,1002 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Rocket Lab Archive — 모자이크 이론</title>
-<link rel="stylesheet" href="style.css">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="color-scheme" content="dark"/>
+  <title>SPACE ROYAL RKLB — Mosaic Intelligence</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <style>
+    /* ── TOKENS ── */
+    :root {
+      --bg:#04060e; --bg2:#07090f; --bg3:#0a0d18;
+      --border:#131928; --brd2:#1e2d44;
+      --y:#e8ff00; --c:#00d4ff; --g:#00ff88; --o:#ff5c1a; --p:#c084fc; --r:#ff4d6a;
+      --tx:#eef2ff; --tx2:#8090b0; --tx3:#5a7090;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{background:var(--bg)!important;color:var(--tx);font-family:'Barlow',sans-serif;overflow-x:hidden}
+    ::-webkit-scrollbar{width:4px}
+    ::-webkit-scrollbar-track{background:var(--bg)}
+    ::-webkit-scrollbar-thumb{background:var(--brd2);border-radius:2px}
+    ::selection{background:rgba(232,255,0,.2)}
+
+    /* ── NAV ── */
+    nav{position:sticky;top:0;z-index:200;background:rgba(4,6,14,.96);border-bottom:1px solid rgba(232,255,0,.08);backdrop-filter:blur(20px);display:flex;align-items:center;padding:0 1.5rem;height:52px;gap:1rem}
+    .nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0;cursor:pointer}
+    .nav-logo-icon{width:30px;height:30px;flex-shrink:0}
+    .nav-logo-text{font-family:'Orbitron',sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.2em;color:var(--tx)}
+    .nav-logo-text span{color:var(--y)}
+    .nav-tabs{display:flex;gap:0;overflow-x:auto;scrollbar-width:none;flex:1}
+    .nav-tabs::-webkit-scrollbar{display:none}
+    .nav-tabs a{flex-shrink:0;padding:0 .9rem;height:52px;display:flex;align-items:center;font-family:'Space Mono',monospace;font-size:.62rem;letter-spacing:.04em;color:var(--tx2);text-decoration:none;border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap;cursor:pointer}
+    .nav-tabs a:hover{color:var(--tx)}
+    .nav-tabs a.active{color:var(--y);border-bottom-color:var(--y)}
+
+    /* ── LIVE BAND ── */
+    .live-band{background:linear-gradient(90deg,var(--bg),#050a18,var(--bg));border-bottom:1px solid rgba(0,212,255,.1);padding:6px 2rem;display:flex;align-items:center;gap:.8rem;overflow:hidden}
+    .live-dot{width:6px;height:6px;border-radius:50%;background:var(--c);animation:livePulse 1.5s ease-in-out infinite;flex-shrink:0}
+    @keyframes livePulse{0%,100%{opacity:.4;transform:scale(.8)}50%{opacity:1;transform:scale(1.2)}}
+    .live-txt{font-family:'Space Mono',monospace;font-size:.6rem;color:var(--c);letter-spacing:.1em;white-space:nowrap}
+
+    /* ── PAGES ── */
+    .page{display:none}
+    .page.active{display:block;animation:pageIn .22s ease}
+    @keyframes pageIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+    /* ── WRAP ── */
+    .wrap{max-width:1340px;margin:0 auto;padding:0 1.5rem}
+
+    /* ── PAGE BAR ── */
+    .pg-bar{background:rgba(4,6,14,.95);border-bottom:1px solid var(--border);padding:0 1.5rem;height:42px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:52px;z-index:100}
+    .pg-crumb{font-family:'Space Mono',monospace;font-size:.58rem;color:var(--tx3);display:flex;align-items:center;gap:.4rem}
+    .pg-crumb-sep{color:var(--border)}
+    .pg-crumb-cur{color:var(--y)}
+    .pg-back-btn{font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:.06em;background:none;border:1px solid var(--border);color:var(--tx3);padding:4px 12px;cursor:pointer;transition:all .15s}
+    .pg-back-btn:hover{border-color:var(--c);color:var(--c)}
+
+    /* ── HERO ── */
+    .hero{padding:3.5rem 0 2.5rem;position:relative;overflow:hidden}
+    .hero::after{content:'';position:absolute;inset:0;z-index:0;background-image:linear-gradient(rgba(0,212,255,.015) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,.015) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;mask-image:linear-gradient(180deg,transparent 0%,rgba(0,0,0,.4) 30%,rgba(0,0,0,.4) 70%,transparent 100%)}
+    .hero>.wrap{position:relative;z-index:1}
+    .hero-eyebrow{display:flex;align-items:center;gap:8px;margin-bottom:.7rem}
+    .hero-eyebrow-line{width:36px;height:1px;background:linear-gradient(90deg,var(--c),transparent)}
+    .hero-eyebrow-txt{font-family:'Space Mono',monospace;font-size:.62rem;letter-spacing:.16em;color:var(--c);text-transform:uppercase}
+    .hero-title{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:clamp(2.6rem,6vw,5.2rem);line-height:.92;text-transform:uppercase;margin-bottom:1.2rem}
+    .t1{color:var(--tx);display:block}
+    .t2{color:transparent;-webkit-text-stroke:1px rgba(240,244,255,.35);display:block}
+    .t3{color:var(--y);text-shadow:0 0 60px rgba(232,255,0,.25);display:block}
+    .hero-sub{font-size:.95rem;color:var(--tx2);line-height:1.75;max-width:500px;margin-bottom:1.4rem;font-weight:300}
+    .hero-ctas{display:flex;gap:.7rem;flex-wrap:wrap}
+    .btn-y{display:inline-flex;align-items:center;gap:8px;background:var(--y);color:#000;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.82rem;letter-spacing:.08em;padding:.8rem 1.8rem;border:none;cursor:pointer;transition:all .2s;text-decoration:none;position:relative;overflow:hidden}
+    .btn-y:hover{box-shadow:0 0 40px rgba(232,255,0,.35);transform:translateY(-1px)}
+    .btn-ghost{display:inline-flex;align-items:center;gap:8px;background:none;border:1px solid rgba(240,244,255,.2);color:var(--tx2);font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:.82rem;letter-spacing:.06em;padding:.8rem 1.8rem;cursor:pointer;transition:all .2s;text-decoration:none}
+    .btn-ghost:hover{border-color:var(--c);color:var(--c)}
+
+    /* ── STATS BAR ── */
+    .stats-bar{background:rgba(7,9,15,.98);border-top:1px solid rgba(232,255,0,.06);border-bottom:1px solid rgba(232,255,0,.06)}
+    .stats-grid{max-width:1340px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr)}
+    .stat{padding:1rem .9rem;border-right:1px solid var(--border);overflow:hidden}
+    .stat:last-child{border-right:none}
+    .stat-val{font-family:'Orbitron','Barlow Condensed',sans-serif;font-weight:700;font-size:clamp(1.1rem,2vw,1.65rem);line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:0 0 20px currentColor}
+    .stat-lbl{font-family:'Space Mono',monospace;font-size:.52rem;color:var(--tx3);text-transform:uppercase;letter-spacing:.1em;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    @media(max-width:900px){.stats-grid{grid-template-columns:repeat(3,1fr)}}
+    @media(max-width:600px){.stats-grid{grid-template-columns:repeat(2,1fr)}}
+
+    /* ── SEC ── */
+    .sec{padding:1.8rem 0}
+    .sec-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem;padding-bottom:.9rem;border-bottom:1px solid var(--border)}
+    .sec-title{font-family:'Orbitron','Barlow Condensed',sans-serif;font-weight:600;font-size:.88rem;letter-spacing:.14em;text-transform:uppercase;color:var(--tx)}
+    .sec-lnk{font-family:'Space Mono',monospace;font-size:.62rem;color:var(--tx3);cursor:pointer;transition:color .15s;text-decoration:none}
+    .sec-lnk:hover{color:var(--c)}
+
+    /* ── SOLAR SYSTEM ── */
+    .solar-sitemap{margin-bottom:1.5rem;border:1px solid var(--border);background:#04060e;position:relative;overflow:hidden}
+    .solar-header{display:flex;justify-content:space-between;align-items:center;padding:.65rem 1.2rem;border-bottom:1px solid rgba(0,212,255,.1);background:rgba(0,0,0,.3)}
+    .solar-title{font-family:'Orbitron',sans-serif;font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;color:var(--tx)}
+    .solar-hint{font-family:'Space Mono',monospace;font-size:.58rem;color:var(--tx3)}
+    #solarCanvas{display:block;width:100%;cursor:grab;outline:none}
+    #solarCanvas:active{cursor:grabbing}
+    #solarTooltip{position:fixed;display:none;background:rgba(4,8,20,.95);border:1px solid;padding:5px 12px;font-family:'Space Mono',monospace;font-size:.62rem;pointer-events:none;z-index:500;white-space:nowrap}
+
+    /* ── LAUNCH CARDS ── */
+    .launch-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border)}
+    .lc{background:var(--bg2);padding:.85rem 1rem;cursor:pointer;transition:background .15s}
+    .lc:hover{background:var(--bg3)}
+    .lc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem}
+    .lc-name{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.95rem;color:var(--tx)}
+    .badge{font-family:'Space Mono',monospace;font-size:.52rem;letter-spacing:.1em;padding:2px 8px;text-transform:uppercase;border:1px solid;border-radius:1px}
+    .b-success{color:var(--g);border-color:rgba(0,255,136,.25);background:rgba(0,255,136,.06);animation:successGlow 3s ease-in-out infinite}
+    @keyframes successGlow{0%,100%{box-shadow:0 0 4px rgba(0,255,136,.2)}50%{box-shadow:0 0 10px rgba(0,255,136,.4)}}
+    .b-upcoming{color:var(--y);border-color:rgba(232,255,0,.25);background:rgba(232,255,0,.06)}
+    .b-partial{color:var(--o);border-color:rgba(255,92,26,.25);background:rgba(255,92,26,.06)}
+    .lc-meta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:.5rem}
+    .lc-tag{font-family:'Space Mono',monospace;font-size:.58rem;color:var(--tx2)}
+    .lc-div{height:1px;background:var(--border);margin:.5rem 0}
+    .lc-desc{font-size:.8rem;color:var(--tx2);line-height:1.6;margin-bottom:.5rem}
+    .lc-foot{display:flex;justify-content:space-between;align-items:center}
+    .lc-flight{font-family:'Space Mono',monospace;font-size:.58rem;color:var(--tx3)}
+    .lc-arrow{color:var(--tx3);font-size:.9rem;transition:color .15s}
+    .lc:hover .lc-arrow{color:var(--y)}
+    @media(max-width:900px){.launch-grid{grid-template-columns:1fr 1fr}}
+    @media(max-width:600px){.launch-grid{grid-template-columns:1fr}}
+
+    /* ── SITES (GLOBE) ── */
+    .sites-layout{display:grid;grid-template-columns:1fr 300px;gap:1rem;margin-bottom:1.5rem}
+    @media(max-width:900px){.sites-layout{grid-template-columns:1fr}}
+    .sites-map{border:1px solid var(--border);position:relative;overflow:hidden;min-height:520px}
+    #globeMount{width:100%;height:520px;background:#020508;display:block}
+    #globeMount canvas{display:block!important;width:100%!important;outline:none}
+    .globe-hint{position:absolute;bottom:10px;right:12px;font-family:'Space Mono',monospace;font-size:.55rem;color:rgba(255,255,255,.25);letter-spacing:.1em;pointer-events:none}
+    .sites-panel{border:1px solid var(--border);background:var(--bg2)}
+    .sp-tabs{display:flex;border-bottom:1px solid var(--border)}
+    .sp-tab{flex:1;padding:.6rem .4rem;font-family:'Space Mono',monospace;font-size:.58rem;letter-spacing:.06em;text-transform:uppercase;border:none;background:none;color:var(--tx3);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s}
+    .sp-tab:hover{color:var(--tx)}
+    .sp-tab.active{color:var(--y);border-bottom-color:var(--y);background:rgba(232,255,0,.03)}
+    .sp-body{padding:1rem}
+    .sp-stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:.8rem}
+    .sp-stat{background:var(--bg);border:1px solid var(--border);padding:.5rem .65rem}
+    .sp-stat-v{font-family:'Orbitron','Barlow Condensed',sans-serif;font-weight:700;font-size:.95rem;line-height:1}
+    .sp-stat-l{font-family:'Space Mono',monospace;font-size:.52rem;color:var(--tx3);text-transform:uppercase;letter-spacing:.07em;margin-top:2px}
+    .sp-desc{font-size:.8rem;color:var(--tx2);line-height:1.65;margin-bottom:.6rem}
+    .sp-coord{font-family:'Space Mono',monospace;font-size:.58rem;color:var(--tx3)}
+    .sp-missions{display:flex;flex-direction:column;gap:5px;margin-top:.8rem}
+    .sp-mission{padding:.5rem .65rem;border:1px solid var(--border);background:var(--bg);border-left:2px solid var(--brd2);transition:border-color .15s}
+    .sp-mission:hover{border-left-color:var(--c)}
+    .sp-m-name{font-size:.8rem;color:var(--tx);font-weight:500;margin-bottom:2px}
+    .sp-m-meta{display:flex;gap:8px;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:.57rem;color:var(--tx3)}
+
+    /* ── INSIGHT PANEL ── */
+    .ins-panel{border:1px solid rgba(232,255,0,.08);background:rgba(7,9,15,.8);position:relative;margin-bottom:1.5rem}
+    .ins-panel::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--y),transparent);opacity:.3}
+    .ins-ph{display:flex;align-items:center;gap:.8rem;padding:.8rem 1.2rem;border-bottom:1px solid var(--border);background:rgba(4,6,14,.6)}
+    .ins-picon{font-size:1.2rem}
+    .ins-ptitle{font-family:'Orbitron','Barlow Condensed',sans-serif;font-weight:600;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--y)}
+    .ins-items{display:flex;flex-direction:column;gap:0}
+    .ii{padding:1rem 1.2rem;border-bottom:1px solid var(--border)}
+    .ii:last-child{border-bottom:none}
+    .ii-tag{font-family:'Space Mono',monospace;font-size:.6rem;color:var(--y);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.4rem}
+    .ii-title{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:1rem;color:var(--tx);margin-bottom:.5rem;line-height:1.3}
+    .ii-body{font-size:.84rem;color:var(--tx2);line-height:1.75;font-weight:300}
+    .chain{display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-top:.7rem;padding-top:.7rem;border-top:1px solid var(--border)}
+    .cn{font-family:'Space Mono',monospace;font-size:.6rem;padding:2px 8px;border:1px solid var(--brd2);color:var(--tx2);background:var(--bg)}
+    .cn.lit{color:var(--y);border-color:rgba(232,255,0,.2);background:rgba(232,255,0,.04)}
+    .ca{color:var(--tx3);font-size:.8rem}
+
+    /* ── KPI GRID ── */
+    .kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:1.5rem}
+    .kpi{background:var(--bg3);padding:.9rem 1rem}
+    .kpi-v{font-family:'Orbitron','Barlow Condensed',sans-serif;font-weight:700;font-size:1.5rem;line-height:1}
+    .kpi-l{font-family:'Space Mono',monospace;font-size:.58rem;color:var(--tx3);text-transform:uppercase;letter-spacing:.08em;margin-top:3px}
+    .kpi-d{font-size:.75rem;color:var(--tx2);margin-top:3px;line-height:1.4}
+    @media(max-width:700px){.kpi-row{grid-template-columns:1fr 1fr}}
+
+    /* ── GEO PANEL ── */
+    .geo-panel{border:1px solid var(--border);background:var(--bg2);margin-bottom:1rem}
+    .geo-panel-hd{padding:.7rem 1rem;border-bottom:1px solid var(--border);background:var(--bg3);display:flex;justify-content:space-between;align-items:center}
+    .geo-panel-title{font-family:'Orbitron','Barlow Condensed',sans-serif;font-weight:600;font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:var(--tx)}
+    .geo-panel-sub{font-family:'Space Mono',monospace;font-size:.58rem;color:var(--tx3)}
+    .geo-panel-body{padding:1rem}
+    .geo-metrics{display:grid;grid-template-columns:repeat(5,1fr);border:1px solid var(--border);background:var(--bg3);margin-bottom:1.5rem}
+    .geo-metric{padding:1rem .9rem;border-right:1px solid var(--border);overflow:hidden}
+    .geo-metric:last-child{border-right:none}
+    .geo-metric-val{font-family:'Orbitron','Barlow Condensed',sans-serif;font-weight:800;font-size:1.6rem;line-height:1}
+    .geo-metric-lbl{font-family:'Space Mono',monospace;font-size:.58rem;color:var(--tx3);text-transform:uppercase;letter-spacing:.08em;margin-top:3px}
+    .geo-metric-sub{font-size:.75rem;color:var(--tx2);margin-top:3px;line-height:1.4}
+    @media(max-width:900px){.geo-metrics{grid-template-columns:repeat(3,1fr)}}
+    .geo-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-bottom:1.2rem}
+    @media(max-width:900px){.geo-grid{grid-template-columns:1fr}}
+    .geo-deal{display:flex;align-items:center;gap:.8rem;padding:.6rem 0;border-bottom:1px solid rgba(30,50,70,.5)}
+    .geo-deal:last-child{border-bottom:none}
+    .geo-deal-flag{font-size:1.2rem;flex-shrink:0;width:28px;text-align:center}
+    .geo-deal-country{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.9rem;color:var(--tx);width:70px;flex-shrink:0}
+    .geo-deal-desc{font-size:.79rem;color:var(--tx2);flex:1;line-height:1.5}
+    .geo-deal-val{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.9rem;flex-shrink:0}
+    .geo-tl-item{display:flex;gap:1rem;padding:.8rem 0;border-bottom:1px solid rgba(30,50,70,.4)}
+    .geo-tl-item:last-child{border-bottom:none}
+    .geo-tl-left{display:flex;flex-direction:column;align-items:center;flex-shrink:0;width:50px}
+    .geo-tl-date{font-family:'Space Mono',monospace;font-size:.58rem;color:var(--tx2);text-align:center;line-height:1.3}
+    .geo-tl-line{flex:1;width:1px;background:var(--border);margin:4px 0}
+    .geo-tl-dot{width:10px;height:10px;border-radius:50%;border:2px solid;flex-shrink:0}
+    .geo-tl-title{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.95rem;color:var(--tx);margin-bottom:3px}
+    .geo-tl-body{font-size:.79rem;color:var(--tx2);line-height:1.55}
+
+    /* ── FOOTER ── */
+    footer{background:rgba(2,4,10,1);border-top:1px solid var(--border);padding:2rem 0 1.5rem}
+    .footer-inner{max-width:1340px;margin:0 auto;padding:0 1.5rem;display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+    .footer-brand{font-family:'Orbitron',sans-serif;font-size:.7rem;letter-spacing:.16em;color:var(--tx);margin-bottom:.4rem}
+    .footer-sub{font-family:'Space Mono',monospace;font-size:.58rem;color:var(--tx3)}
+    .footer-disc{font-family:'Space Mono',monospace;font-size:.57rem;color:var(--tx3);line-height:1.7;max-width:500px}
+
+    /* ── SCROLLTOP ── */
+    #scrollTop{position:fixed;bottom:1.5rem;right:1.5rem;width:40px;height:40px;background:var(--bg3);border:1px solid var(--brd2);color:var(--tx2);cursor:pointer;display:none;align-items:center;justify-content:center;font-size:1rem;z-index:300;transition:all .2s}
+    #scrollTop:hover{border-color:var(--y);color:var(--y);box-shadow:0 0 20px rgba(232,255,0,.2)}
+    #scrollTop.vis{display:flex}
+  </style>
 </head>
 <body>
-
+<!-- NAV -->
 <nav>
-  <div class="nav-brand">🚀 <span>RKLB</span> Archive</div>
+  <a class="nav-logo" onclick="showPage('home')">
+    <svg class="nav-logo-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="50" cy="50" r="46" fill="none" stroke="#e8ff00" stroke-width="3"/>
+      <path d="M50 18 C50 18 38 30 36 48 L36 66 L50 72 L64 66 L64 48 C62 30 50 18 50 18Z" fill="#e8ff00"/>
+      <path d="M36 58 L28 70 L36 68 Z" fill="#e8ff00"/>
+      <path d="M64 58 L72 70 L64 68 Z" fill="#e8ff00"/>
+      <circle cx="50" cy="44" r="6" fill="#04060e"/>
+      <path d="M42 72 C44 80 50 84 50 84 C50 84 56 80 58 72 L50 76 Z" fill="rgba(232,255,0,.6)">
+        <animate attributeName="opacity" values="0.4;1;0.4" dur="1.2s" repeatCount="indefinite"/>
+      </path>
+    </svg>
+    <span class="nav-logo-text">SPACE<span> ROYAL</span> RKLB</span>
+  </a>
   <div class="nav-tabs">
-    <button class="nav-tab active" onclick="showTab('overview')">개요</button>
-    <button class="nav-tab" onclick="showTab('launches')">발사 아카이브</button>
-    <button class="nav-tab" onclick="showTab('financial')">재무</button>
-    <button class="nav-tab" onclick="showTab('mosaic')">모자이크 분석</button>
+    <a id="nav-home"          onclick="showPage('home')">홈</a>
+    <a id="nav-launches"      onclick="showPage('launches')">발사 아카이브</a>
+    <a id="nav-sites"         onclick="showPage('sites')">🗺️ 발사장</a>
+    <a id="nav-neutron"       onclick="showPage('neutron')">⚡ Neutron</a>
+    <a id="nav-products"      onclick="showPage('products')">제품군</a>
+    <a id="nav-mosaic"        onclick="showPage('mosaic')">모자이크</a>
+    <a id="nav-compare"       onclick="showPage('compare')">경쟁비교</a>
+    <a id="nav-finance"       onclick="showPage('finance')" style="color:var(--p)">📉 재무</a>
+    <a id="nav-stockanalysis" onclick="showPage('stockanalysis')">주가분석</a>
+    <a id="nav-geo"           onclick="showPage('geo')" style="color:var(--c)">🌏 지정학</a>
+    <a id="nav-posmap"        onclick="showPage('posmap')" style="color:var(--y)">🌐 포지셔닝</a>
+    <a id="nav-targets"       onclick="showPage('targets')">목표주가</a>
+    <a id="nav-events"        onclick="showPage('events')">이벤트</a>
+    <a id="nav-outlook"       onclick="showPage('outlook')">우주전망</a>
+    <a id="nav-reports"       onclick="showPage('reports')">리포트</a>
+    <a id="nav-about"         onclick="showPage('about')" style="color:var(--p)">🧑‍🚀 CEO</a>
   </div>
 </nav>
 
-<div class="hero">
-  <h1>Rocket <span>Lab</span> Archive</h1>
-  <p>모자이크 이론(Mosaic Theory) 적용 — 공개 정보 집약을 통한 로켓랩 심층 분석</p>
+<!-- LIVE BAND -->
+<div class="live-band">
+  <div class="live-dot"></div>
+  <div class="live-txt" id="liveTxt">⚡ RKLB · 83번째 발사 성공 (Mar 5, 2026) · 다음 미션 #84 미정 · LC-1 NZ</div>
 </div>
-
-<div class="stats-bar" id="stats-bar">
-  <div class="stat"><div class="stat-val" id="s-total">—</div><div class="stat-lbl">총 발사</div></div>
-  <div class="stat"><div class="stat-val" id="s-suc">—</div><div class="stat-lbl">성공</div></div>
-  <div class="stat"><div class="stat-val" id="s-rate" style="color:var(--suc)">—</div><div class="stat-lbl">성공률</div></div>
-  <div class="stat"><div class="stat-val" id="s-rev" style="color:var(--acc2)">—</div><div class="stat-lbl">2024 매출</div></div>
-  <div class="stat"><div class="stat-val" id="s-backlog" style="color:var(--neu)">—</div><div class="stat-lbl">수주잔고</div></div>
+<!-- ══════════ HOME ══════════ -->
+<div id="page-home" class="page active">
+  <!-- HERO -->
+  <div class="hero">
+    <div class="wrap">
+      <div class="hero-eyebrow">
+        <div class="hero-eyebrow-line"></div>
+        <div class="hero-eyebrow-txt">Mosaic Intelligence · SPACE ROYAL RKLB</div>
+      </div>
+      <h1 class="hero-title">
+        <span class="t1">Rocket Lab</span>
+        <span class="t2">Intelligence</span>
+        <span class="t3">Archive</span>
+      </h1>
+      <p class="hero-sub">83회 발사 · $601.8M 매출 · SDA $1.33B. 로켓랩의 모든 데이터를 한 곳에.</p>
+      <div class="hero-ctas">
+        <button class="btn-y" onclick="showPage('launches')">▶ 발사 아카이브 →</button>
+        <button class="btn-ghost" onclick="showPage('mosaic')">🧩 모자이크 인사이트</button>
+        <button class="btn-ghost" onclick="showPage('posmap')" style="border-color:rgba(232,255,0,.3);color:var(--y)">🌐 포지셔닝 맵</button>
+      </div>
+    </div>
+  </div>
+  <!-- STATS -->
+  <div class="stats-bar">
+    <div class="stats-grid">
+      <div class="stat"><div class="stat-val" style="color:var(--g)">$601.8M</div><div class="stat-lbl">FY2025 매출</div></div>
+      <div class="stat"><div class="stat-val" style="color:var(--y)">83회</div><div class="stat-lbl">누적 발사</div></div>
+      <div class="stat"><div class="stat-val" style="color:var(--c)">$1.85B</div><div class="stat-lbl">수주잔고</div></div>
+      <div class="stat"><div class="stat-val" style="color:var(--o)">$1.33B</div><div class="stat-lbl">SDA 계약</div></div>
+      <div class="stat"><div class="stat-val" style="color:var(--p)">$68.41</div><div class="stat-lbl">현재 주가</div></div>
+    </div>
+  </div>
+  <div class="wrap">
+    <!-- 3D 태양계 -->
+    <div class="sec">
+      <div class="sec-hd">
+        <div class="sec-title">🪐 페이지 태양계</div>
+        <span class="sec-lnk">드래그: 회전 · 클릭: 이동</span>
+      </div>
+      <div class="solar-sitemap">
+        <div class="solar-header">
+          <div class="solar-title">🪐 SPACE ROYAL RKLB — 모든 페이지</div>
+          <div class="solar-hint">드래그 회전 · 클릭 이동 · 호버 정보</div>
+        </div>
+        <canvas id="solarCanvas" height="600"></canvas>
+      </div>
+    </div>
+    <!-- 최근 발사 -->
+    <div class="sec">
+      <div class="sec-hd">
+        <div class="sec-title">🚀 최근 발사 기록</div>
+        <a class="sec-lnk" onclick="showPage('launches')">전체 아카이브 →</a>
+      </div>
+      <div class="launch-grid">
+        <div class="lc" onclick="showPage('launches')">
+          <div class="lc-top"><div class="lc-name">Insight At Speed Is A Friend Indeed</div><span class="badge b-success">SUCCESS</span></div>
+          <div class="lc-meta"><span class="lc-tag">📅 Mar 5, 2026</span><span class="lc-tag">🎯 LEO 470km</span></div>
+          <div class="lc-div"></div>
+          <div class="lc-desc">기밀 상업 위성 배치. 83번째 발사. 4번째 2026 미션.</div>
+          <div class="lc-foot"><div class="lc-flight">Flight #83 · Electron · LC-1</div><div class="lc-arrow">→</div></div>
+        </div>
+        <div class="lc" onclick="showPage('launches')">
+          <div class="lc-top"><div class="lc-name">The Lightning Rod</div><span class="badge b-success">SUCCESS</span></div>
+          <div class="lc-meta"><span class="lc-tag">📅 11 Feb 2026</span><span class="lc-tag">🎯 LEO</span></div>
+          <div class="lc-div"></div>
+          <div class="lc-desc">NRO 기밀 위성. 정부 미션 카덴스 확대.</div>
+          <div class="lc-foot"><div class="lc-flight">Flight #82 · Electron · LC-2</div><div class="lc-arrow">→</div></div>
+        </div>
+        <div class="lc" onclick="showPage('launches')">
+          <div class="lc-top"><div class="lc-name">Owl The Way Up</div><span class="badge b-success">SUCCESS</span></div>
+          <div class="lc-meta"><span class="lc-tag">📅 22 Jan 2026</span><span class="lc-tag">🎯 LEO</span></div>
+          <div class="lc-div"></div>
+          <div class="lc-desc">Kinéis IoT 위성 컨스텔레이션 배치.</div>
+          <div class="lc-foot"><div class="lc-flight">Flight #81 · Electron · LC-2</div><div class="lc-arrow">→</div></div>
+        </div>
+      </div>
+    </div>
+    <!-- 모자이크 인사이트 -->
+    <div class="sec">
+      <div class="sec-hd"><div class="sec-title">🧩 핵심 모자이크 인사이트</div><a class="sec-lnk" onclick="showPage('mosaic')">전체 보기 →</a></div>
+      <div class="ins-panel">
+        <div class="ins-ph"><div class="ins-picon">🧩</div><div class="ins-ptitle">Mosaic Intelligence — Top 3</div></div>
+        <div class="ins-items">
+          <div class="ii">
+            <div class="ii-tag">⚡ VERTICAL INTEGRATION</div>
+            <div class="ii-title">발사·위성·방산·센서를 외부 판매하는 상장사 — RKLB 유일</div>
+            <div class="ii-body">SpaceX는 부품 외부 판매 없음. 전통 방산은 발사 역량 없음. RKLB만이 이 4개 레이어를 외부에 판매. 이 포지션에 가격이 아직 미반영.</div>
+            <div class="chain"><span class="cn lit">발사</span><span class="ca">+</span><span class="cn lit">위성</span><span class="ca">+</span><span class="cn lit">방산</span><span class="ca">+</span><span class="cn lit">센서</span><span class="ca">→</span><span class="cn">상장사 독보적</span></div>
+          </div>
+          <div class="ii">
+            <div class="ii-tag">🌏 GEOPOLITICAL MOAT</div>
+            <div class="ii-title">뉴질랜드 — 남반구 유일 전용 발사장 + Five Eyes 동맹</div>
+            <div class="ii-body">SSO 궤도에 필수적인 LC-1. 대체 불가. 2026.1 Hegseth 국방장관 방문으로 방산 Prime 지위 공인.</div>
+            <div class="chain"><span class="cn lit">남반구 독점</span><span class="ca">→</span><span class="cn">SSO 필수</span><span class="ca">→</span><span class="cn lit">대체 불가</span><span class="ca">→</span><span class="cn">가격 결정력</span></div>
+          </div>
+          <div class="ii">
+            <div class="ii-tag">🛡️ SDA MOMENTUM</div>
+            <div class="ii-title">SDA T2+T3 $1.33B → 방산 시스템 인티그레이터 자격 입증</div>
+            <div class="ii-body">GEOST 인수 6개월 만에 SDA T3 $816M 수주. M&amp;A가 계약 수주로 직결되는 패턴. Mynaric 인수 시 SDA T4 OISL 독점 포지션.</div>
+            <div class="chain"><span class="cn lit">GEOST 인수</span><span class="ca">→</span><span class="cn lit">SDA T3 $816M</span><span class="ca">→</span><span class="cn lit">Mynaric</span><span class="ca">→</span><span class="cn">SDA T4</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
-
-<!-- OVERVIEW -->
-<section id="tab-overview" class="active">
-  <div class="chart-grid">
-    <div class="chart-card">
-      <div class="chart-title">연도별 발사 현황</div>
-      <div class="bar-chart" id="launch-by-year"></div>
+<!-- ══════════ SITES ══════════ -->
+<div id="page-sites" class="page">
+  <div class="pg-bar"><div class="pg-crumb"><span>홈</span><span class="pg-crumb-sep">›</span><span>발사</span><span class="pg-crumb-sep">›</span><span class="pg-crumb-cur">🗺️ 발사장 지도</span></div><button class="pg-back-btn" onclick="showPage('home')">← 홈으로</button></div>
+  <div class="wrap"><div class="sec">
+    <div class="sec-hd"><div class="sec-title">🗺️ 발사장 지도</div><span class="sec-lnk">운용 중 3개 · 개발 중 1개</span></div>
+    <div class="sites-layout">
+      <div class="sites-map">
+        <div id="globeMount"></div>
+        <div class="globe-hint">⟳ DRAG TO ROTATE</div>
+      </div>
+      <div class="sites-panel">
+        <div class="sp-tabs">
+          <button class="sp-tab active" onclick="selectSite('lc1')" id="sp-tab-lc1">LC-1 NZ</button>
+          <button class="sp-tab" onclick="selectSite('lc2')" id="sp-tab-lc2">LC-2 VA</button>
+          <button class="sp-tab" onclick="selectSite('lc3')" id="sp-tab-lc3">LC-3</button>
+          <button class="sp-tab" onclick="selectSite('hq')" id="sp-tab-hq">HQ</button>
+        </div>
+        <div class="sp-body" id="sp-body"></div>
+      </div>
     </div>
-    <div class="chart-card">
-      <div class="chart-title">주요 고객 분포</div>
-      <div class="bar-chart" id="customer-dist"></div>
+    <div class="sec-hd" style="margin-top:1rem"><div class="sec-title">📅 2026 예정 미션</div></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--border)">
+      <div style="background:var(--bg2);padding:1rem">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:.88rem;letter-spacing:.1em;text-transform:uppercase;color:var(--y);margin-bottom:.8rem;padding-bottom:.5rem;border-bottom:1px solid var(--border)">🇳🇿 LC-1 · Māhia</div>
+        <div class="sp-missions">
+          <div class="sp-mission"><div class="sp-m-name">Eight Days A Week</div><div class="sp-m-meta"><span>Mar 19</span><span>iQPS SAR</span><span class="badge b-upcoming">UPCOMING</span></div></div>
+          <div class="sp-mission"><div class="sp-m-name">Kakushin Rising</div><div class="sp-m-meta"><span>Q1 2026</span><span>JAXA CubeSats</span></div></div>
+          <div class="sp-mission"><div class="sp-m-name">Venus Life Finder</div><div class="sp-m-meta"><span>Summer 2026</span><span>MIT · 심우주</span></div></div>
+        </div>
+      </div>
+      <div style="background:var(--bg2);padding:1rem">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:.88rem;letter-spacing:.1em;text-transform:uppercase;color:var(--c);margin-bottom:.8rem;padding-bottom:.5rem;border-bottom:1px solid var(--border)">🇺🇸 LC-2 · Wallops</div>
+        <div class="sp-missions">
+          <div class="sp-mission"><div class="sp-m-name">VICTUS HAZE (TacRS-4)</div><div class="sp-m-meta"><span>Q2 2026</span><span>USSF 전술 발사</span></div></div>
+          <div class="sp-mission"><div class="sp-m-name">HASTE 극초음속</div><div class="sp-m-meta"><span>2026 TBD</span><span>DIU 준궤도</span></div></div>
+        </div>
+      </div>
+      <div style="background:var(--bg2);padding:1rem;border:1px dashed var(--brd2)">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:.88rem;letter-spacing:.1em;text-transform:uppercase;color:var(--o);margin-bottom:.8rem;padding-bottom:.5rem;border-bottom:1px solid var(--border)">⚡ LC-3 · Neutron</div>
+        <div class="sp-missions">
+          <div class="sp-mission"><div class="sp-m-name">Neutron Maiden Flight</div><div class="sp-m-meta"><span>Q4 2026 목표</span><span class="badge" style="color:var(--o);border-color:rgba(255,92,26,.3)">개발중</span></div></div>
+        </div>
+      </div>
     </div>
-    <div class="chart-card">
-      <div class="chart-title">연도별 매출 추이 ($M)</div>
-      <div class="bar-chart" id="rev-chart"></div>
+  </div></div>
+</div>
+<!-- ══════════ GEO ══════════ -->
+<div id="page-geo" class="page">
+  <div class="pg-bar"><div class="pg-crumb"><span>홈</span><span class="pg-crumb-sep">›</span><span>분석</span><span class="pg-crumb-sep">›</span><span class="pg-crumb-cur">🌏 지정학 포지션</span></div><button class="pg-back-btn" onclick="showPage('home')">← 홈으로</button></div>
+  <div class="wrap"><div class="sec">
+    <div class="sec-hd"><div class="sec-title">🌏 Rocket Lab 지정학적 가치</div></div>
+    <div class="geo-metrics">
+      <div class="geo-metric"><div class="geo-metric-val" style="color:var(--y)">4개국</div><div class="geo-metric-lbl">운영 거점</div><div class="geo-metric-sub">미국·NZ·캐나다·독일</div></div>
+      <div class="geo-metric"><div class="geo-metric-val" style="color:var(--g)">Five Eyes</div><div class="geo-metric-lbl">핵심 동맹</div><div class="geo-metric-sub">NRO·USSF 기밀 5회+</div></div>
+      <div class="geo-metric"><div class="geo-metric-val" style="color:var(--c)">18개국+</div><div class="geo-metric-lbl">고객 국적</div><div class="geo-metric-sub">일본·한국·프랑스·UAE</div></div>
+      <div class="geo-metric"><div class="geo-metric-val" style="color:var(--o)">$1.33B</div><div class="geo-metric-lbl">방산 계약</div><div class="geo-metric-sub">SDA T2+T3</div></div>
+      <div class="geo-metric"><div class="geo-metric-val" style="color:var(--p)">非SpaceX</div><div class="geo-metric-lbl">독립 인프라</div><div class="geo-metric-sub">동맹국 자주권 수혜</div></div>
     </div>
-    <div class="chart-card">
-      <div class="chart-title">최근 10회 발사 타임라인</div>
-      <div class="timeline" id="recent-timeline"></div>
+    <div class="geo-grid">
+      <div class="geo-panel">
+        <div class="geo-panel-hd"><div class="geo-panel-title">🤝 국가별 주요 계약</div></div>
+        <div class="geo-panel-body">
+          <div class="geo-deal"><div class="geo-deal-flag">🇺🇸</div><div class="geo-deal-country">미국</div><div class="geo-deal-desc">SDA T2/T3, NRO 기밀, Pentagon 방문</div><div class="geo-deal-val" style="color:var(--o)">$1.33B+</div></div>
+          <div class="geo-deal"><div class="geo-deal-flag">🇯🇵</div><div class="geo-deal-country">일본</div><div class="geo-deal-desc">iQPS SAR 위성 7회+ 반복 발사</div><div class="geo-deal-val" style="color:var(--g)">$70M+</div></div>
+          <div class="geo-deal"><div class="geo-deal-flag">🇫🇷</div><div class="geo-deal-country">프랑스</div><div class="geo-deal-desc">Kinéis IoT 컨스텔레이션 25기</div><div class="geo-deal-val" style="color:var(--c)">$40M+</div></div>
+          <div class="geo-deal"><div class="geo-deal-flag">🇩🇪</div><div class="geo-deal-country">독일</div><div class="geo-deal-desc">Mynaric OISL 인수 · ESA HydRON</div><div class="geo-deal-val" style="color:var(--c)">$150M</div></div>
+          <div class="geo-deal"><div class="geo-deal-flag">🇳🇿</div><div class="geo-deal-country">뉴질랜드</div><div class="geo-deal-desc">LC-1 전용 발사장 · Five Eyes 인프라</div><div class="geo-deal-val" style="color:var(--g)">전략적</div></div>
+        </div>
+      </div>
+      <div class="geo-panel">
+        <div class="geo-panel-hd"><div class="geo-panel-title">👁️ Five Eyes 타임라인</div></div>
+        <div class="geo-panel-body">
+          <div class="geo-tl-item"><div class="geo-tl-left"><div class="geo-tl-date">2020-23</div><div class="geo-tl-line"></div><div class="geo-tl-dot" style="background:var(--o);border-color:var(--o)"></div></div><div><div class="geo-tl-title">NRO 기밀 임무 4회 — LC-1 Māhia</div><div class="geo-tl-body">Five Eyes 우주 감시망 구축.</div></div></div>
+          <div class="geo-tl-item"><div class="geo-tl-left"><div class="geo-tl-date">2025.1</div><div class="geo-tl-line"></div><div class="geo-tl-dot" style="background:var(--g);border-color:var(--g)"></div></div><div><div class="geo-tl-title">NZ 국방비 GDP 2% 선언 · 우주 협력 명시</div><div class="geo-tl-body">RKLB "Pentagon 지원 준비 완료" 공식 선언.</div></div></div>
+          <div class="geo-tl-item"><div class="geo-tl-left"><div class="geo-tl-date">2026.1</div><div class="geo-tl-line"></div><div class="geo-tl-dot" style="background:var(--y);border-color:var(--y)"></div></div><div><div class="geo-tl-title">Hegseth 국방장관 Long Beach 방문</div><div class="geo-tl-body">방산 Prime 지위 공인. 주가 사상 최고 $91.80.</div></div></div>
+          <div class="geo-tl-item"><div class="geo-tl-left"><div class="geo-tl-date">2026.3</div><div class="geo-tl-line"></div><div class="geo-tl-dot" style="background:var(--c);border-color:var(--c)"></div></div><div><div class="geo-tl-title">Mynaric — ESA HydRON 계약 수주</div><div class="geo-tl-body">미·EU 이중 시장 선점 확정.</div></div></div>
+        </div>
+      </div>
     </div>
+    <div class="ins-panel">
+      <div class="ins-ph"><div class="ins-picon">🧩</div><div class="ins-ptitle">지정학 모자이크 인사이트</div></div>
+      <div class="ins-items">
+        <div class="ii"><div class="ii-tag">🌏 GEOPOLITICAL MOAT</div><div class="ii-title">뉴질랜드 지리적 사실이 복제 불가능한 해자를 만든다</div><div class="ii-body">남반구 전용 발사장은 지구상에 LC-1이 유일에 가깝습니다. SSO·극궤도 위성에 필수적이며 대체 발사장이 없습니다.</div><div class="chain"><span class="cn lit">남반구 유일</span><span class="ca">→</span><span class="cn lit">SSO 독점</span><span class="ca">→</span><span class="cn">대체 불가</span><span class="ca">→</span><span class="cn lit">가격 결정력</span></div></div>
+        <div class="ii"><div class="ii-tag">🤝 NEUTRAL VALUE</div><div class="ii-title">美中 패권 경쟁에서 RKLB = "서방의 비SpaceX 옵션"</div><div class="ii-body">SpaceX 독점을 꺼리는 유럽·일본·한국이 선택할 수 있는 유일한 궤도 발사체. 이 지정학적 프리미엄은 밸류에이션에 미반영.</div><div class="chain"><span class="cn lit">SpaceX 기피 수요</span><span class="ca">→</span><span class="cn">RKLB 독점 수혜</span><span class="ca">→</span><span class="cn lit">동맹국 프리미엄</span><span class="ca">→</span><span class="cn lit">밸류에이션 미반영</span></div></div>
+      </div>
+    </div>
+  </div></div>
+</div>
+<div id="page-launches" class="page">
+  <div class="pg-bar"><div class="pg-crumb"><span>홈</span><span class="pg-crumb-sep">›</span><span class="pg-crumb-cur">📋 발사 아카이브</span></div><button class="pg-back-btn" onclick="showPage('home')">← 홈으로</button></div>
+  <div class="wrap"><div class="sec"><div class="sec-hd"><div class="sec-title">📋 발사 아카이브</div></div>
+  <p style="color:var(--tx2);font-size:.9rem;line-height:1.7">83회 누적 발사 기록. 2006년 창업 이후 Electron 로켓으로 꾸준히 발사 카덴스를 높여왔습니다. 2026년 현재 연간 20회+ 목표.</p></div></div></div>
+<div id="page-neutron" class="page">
+  <div class="pg-bar"><div class="pg-crumb"><span>홈</span><span class="pg-crumb-sep">›</span><span class="pg-crumb-cur">⚡ Neutron 트래커</span></div><button class="pg-back-btn" onclick="showPage('home')">← 홈으로</button></div>
+  <div class="wrap"><div class="sec"><div class="sec-hd"><div class="sec-title">⚡ Neutron 트래커</div></div>
+  <p style="color:var(--tx2);font-size:.9rem;line-height:1.7">중형 재사용 로켓. 13,000kg LEO 탑재. Q4 2026 초도 발사 목표. Hungry Hippo 페어링, 재사용 1단, Archimedes 엔진.</p></div></div></div>
+<div id="page-products" class="page">
+  <div class="pg-bar"><div class="pg-crumb"><span>홈</span><span class="pg-crumb-sep">›</span><span class="pg-crumb-cur">🔩 제품군 &amp; 수직통합</span></div><button class="pg-back-btn" onclick="showPage('home')">← 홈으로</button></div>
+  <div class="wrap"><div class="sec"><div class="sec-hd"><div class="sec-title">🔩 제품군 &amp; 수직통합</div></div>
+  <p style="color:var(--tx2);font-size:.9rem;line-height:1.7">Electron · Neutron · Photon · Lightning · SolAero 태양전지 · GEOST 센서 · Mynaric OISL. 발사체부터 컴포넌트까지 완전 수직통합.</p></div></div></div>
+<div id="page-mosaic" class="page">
+  <div class="pg-bar"><div class="pg-crumb"><span>홈</span><span class="pg-crumb-sep">›</span><span class="pg-crumb-cur">🧩 모자이크 인사이트</span></div><button class="pg-back-btn" onclick="showPage('home')">← 홈으로</button></div>
+  <div class="wrap"><div class="sec"><div class="sec-hd"><div class="sec-title">🧩 모자이크 인사이트</div></div>
+  <p style="color:var(--tx2);font-size:.9rem;line-height:1.7">공개 정보 집약을 통한 RKLB 심층 분석. 발사 카덴스, 수주잔고, SDA 계약, 지정학 해자, 수직통합 등 핵심 신호.</p></div></div></div>
+<div id="page-compare" class="page">
+  <div class="pg-bar"><div class="pg-crumb"><span>홈</span><span class="pg-crumb-sep">›</span><span class="pg-crumb-cur">⚖️ 발사체 스펙 비교</span></div><button class="pg-back-btn" onclick="showPage('home')">← 홈으로</button></div>
+  <div class="wrap"><div class="sec"><div class="sec-hd"><div class="sec-title">⚖️ 발사체 스펙 비교</div></div>
+  <p style="color:var(--tx2);font-size:.9rem;line-height:1.7">Electron vs Falcon 9 vs New Glenn vs Firefly Alpha vs Neutron. 페이로드·비용·재사용·카덴스 비교.</p></div></div></div>
+<div id="page-stockanalysis" class="page">
+  <div class="pg-bar"><div class="pg-crumb"><span>홈</span><span class="pg-crumb-sep">›</span><span class="pg-crumb-cur">📊 주가 분석</span></div><button class="pg-back-btn" onclick="showPage('home')">← 홈으로</button></div>
+  <div class="wrap"><div class="sec"><div class="sec-hd"><div class="sec-title">📊 주가 분석</div></div>
+  <p style="color:var(--tx2);font-size:.9rem;line-height:1.7">현재가 $68.41 · 52주 최고 $99.58 · 컨센서스 PT $89.50 (18개 기관 평균). 기관 보유 50.4%.</p></div></div></div>
+<div id="page-posmap" class="page">
+  <div class="pg-bar"><div class="pg-crumb"><span>홈</span><span class="pg-crumb-sep">›</span><span class="pg-crumb-cur">🌐 우주기업 포지셔닝 맵</span></div><button class="pg-back-btn" onclick="showPage('home')">← 홈으로</button></div>
+  <div class="wrap"><div class="sec"><div class="sec-hd"><div class="sec-title">🌐 우주기업 포지셔닝 맵</div></div>
+  <p style="color:var(--tx2);font-size:.9rem;line-height:1.7">30개 기업 · 5개 레이어. X축: 수직통합 수준. Y축: 기술 혁신도. RKLB = 중형 풀스택 유일 포지션.</p></div></div></div>
+<div id="page-targets" class="page">
+  <div class="pg-bar"><div class="pg-crumb"><span>홈</span><span class="pg-crumb-sep">›</span><span class="pg-crumb-cur">🎯 기관 목표주가</span></div><button class="pg-back-btn" onclick="showPage('home')">← 홈으로</button></div>
+  <div class="wrap"><div class="sec"><div class="sec-hd"><div class="sec-title">🎯 기관 목표주가</div></div>
+  <p style="color:var(--tx2);font-size:.9rem;line-height:1.7">BofA $120 · MS $105 · Needham $90 · Stifel $90 · Cantor $85 · DB $73 · GS $69 · Citi $50. 컨센서스 $89.50.</p></div></div></div>
+<div id="page-events" class="page">
+  <div class="pg-bar"><div class="pg-crumb"><span>홈</span><span class="pg-crumb-sep">›</span><span class="pg-crumb-cur">🗓️ 2026 우주 이벤트</span></div><button class="pg-back-btn" onclick="showPage('home')">← 홈으로</button></div>
+  <div class="wrap"><div class="sec"><div class="sec-hd"><div class="sec-title">🗓️ 2026 우주 이벤트</div></div>
+  <p style="color:var(--tx2);font-size:.9rem;line-height:1.7">Artemis II (Q3) · Neutron 초도 발사 (Q4) · Vast Haven-1 (Q2) · USSF VICTUS HAZE · SDA T3 납기 시작.</p></div></div></div>
+<div id="page-outlook" class="page">
+  <div class="pg-bar"><div class="pg-crumb"><span>홈</span><span class="pg-crumb-sep">›</span><span class="pg-crumb-cur">📈 우주산업 전망</span></div><button class="pg-back-btn" onclick="showPage('home')">← 홈으로</button></div>
+  <div class="wrap"><div class="sec"><div class="sec-hd"><div class="sec-title">📈 우주산업 전망</div></div>
+  <p style="color:var(--tx2);font-size:.9rem;line-height:1.7">2030년까지 $1조 시장. LEO 위성 컨스텔레이션 폭증. SDA·USSF 예산 확대. 상업 달 경제 태동.</p></div></div></div>
+<div id="page-reports" class="page">
+  <div class="pg-bar"><div class="pg-crumb"><span>홈</span><span class="pg-crumb-sep">›</span><span class="pg-crumb-cur">📚 리포트 라이브러리</span></div><button class="pg-back-btn" onclick="showPage('home')">← 홈으로</button></div>
+  <div class="wrap"><div class="sec"><div class="sec-hd"><div class="sec-title">📚 리포트 라이브러리</div></div>
+  <p style="color:var(--tx2);font-size:.9rem;line-height:1.7">Morgan Stanley · BofA · Needham · ESA · BryceTech · PwC 리포트 12개 큐레이션.</p></div></div></div>
+<div id="page-about" class="page">
+  <div class="pg-bar"><div class="pg-crumb"><span>홈</span><span class="pg-crumb-sep">›</span><span class="pg-crumb-cur">🧑‍🚀 Peter Beck CEO</span></div><button class="pg-back-btn" onclick="showPage('home')">← 홈으로</button></div>
+  <div class="wrap"><div class="sec"><div class="sec-hd"><div class="sec-title">🧑‍🚀 Peter Beck CEO</div></div>
+  <p style="color:var(--tx2);font-size:.9rem;line-height:1.7">뉴질랜드 인버카길 출신 · 독학 항공우주 엔지니어 · 2006년 창업. "우주는 소수만의 것이어선 안 된다." 83회 발사, $601M 매출로 증명.</p></div></div></div>
+<div id="page-finance" class="page">
+  <div class="pg-bar"><div class="pg-crumb"><span>홈</span><span class="pg-crumb-sep">›</span><span class="pg-crumb-cur">📉 재무차트</span></div><button class="pg-back-btn" onclick="showPage('home')">← 홈으로</button></div>
+  <div class="wrap"><div class="sec"><div class="sec-hd"><div class="sec-title">📉 재무 성과</div></div>
+  <div class="kpi-row">
+    <div class="kpi"><div class="kpi-v" style="color:var(--g)">$601.8M</div><div class="kpi-l">FY2025 매출</div><div class="kpi-d">+38% YoY</div></div>
+    <div class="kpi"><div class="kpi-v" style="color:var(--y)">41.9%</div><div class="kpi-l">Non-GAAP GM</div><div class="kpi-d">역대 최고</div></div>
+    <div class="kpi"><div class="kpi-v" style="color:var(--c)">$1.85B</div><div class="kpi-l">백로그</div><div class="kpi-d">+73% YoY</div></div>
+    <div class="kpi"><div class="kpi-v" style="color:var(--p)">$904M</div><div class="kpi-l">FY2026E</div><div class="kpi-d">컨센서스</div></div>
   </div>
-</section>
-
-<!-- LAUNCHES -->
-<section id="tab-launches">
-  <div class="filters">
-    <input class="search-box" id="search" placeholder="미션명, 고객, 페이로드 검색..." oninput="filterLaunches()">
-    <button class="filter-btn active" onclick="setFilter('all',this)">전체</button>
-    <button class="filter-btn" onclick="setFilter('success',this)">성공</button>
-    <button class="filter-btn" onclick="setFilter('failure',this)">실패</button>
-    <button class="filter-btn" onclick="setFilter('NZ',this)">뉴질랜드</button>
-    <button class="filter-btn" onclick="setFilter('VA',this)">버지니아</button>
-  </div>
-  <div class="table-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th>#</th><th>미션명</th><th>날짜</th><th>결과</th>
-          <th>궤도</th><th>페이로드</th><th>고객</th><th>비고</th>
-        </tr>
-      </thead>
-      <tbody id="launch-tbody"></tbody>
-    </table>
-  </div>
-  <div id="launch-count" style="text-align:right;color:var(--txt3);font-size:.78rem;margin-top:.5rem"></div>
-</section>
-
-<!-- FINANCIAL -->
-<section id="tab-financial">
-  <div class="fin-grid" id="fin-kpis"></div>
-  <div class="chart-grid">
-    <div class="chart-card">
-      <div class="chart-title">연도별 매출 ($M)</div>
-      <div class="bar-chart" id="fin-rev-chart"></div>
-    </div>
-    <div class="chart-card">
-      <div class="chart-title">매출총이익 ($M)</div>
-      <div class="bar-chart" id="fin-gp-chart"></div>
-    </div>
-  </div>
-  <div class="chart-card" style="margin-bottom:1rem">
-    <div class="chart-title">순손실 추이 — 흑자 전환 경로</div>
-    <div class="bar-chart" id="fin-nl-chart"></div>
-    <p style="font-size:.75rem;color:var(--txt3);margin-top:.75rem">* 순손실 절대값 표시. 매출 성장 대비 손실 안정화 추세 주목.</p>
-  </div>
-</section>
-
-<!-- MOSAIC -->
-<section id="tab-mosaic">
-  <div class="mosaic-header">
+  <p style="color:var(--tx2);font-size:.9rem;line-height:1.7">연간 매출: 2020 $34.6M → 2021 $62.2M → 2022 $211M → 2023 $244.9M → 2024 $436.2M → 2025 $601.8M. 수주잔고 $1.85B = 매출 3배. 흑자 전환 경로 가시화.</p>
+  </div></div>
+</div>
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
     <div>
-      <h2 style="font-size:1.2rem;font-weight:700">모자이크 이론 분석</h2>
-      <p style="color:var(--txt2);font-size:.85rem;margin-top:.2rem">공개 정보 조각을 결합해 RKLB 투자 그림을 완성</p>
+      <div class="footer-brand">⚡ SPACE ROYAL RKLB</div>
+      <div class="footer-sub">Mosaic Intelligence Platform · 2026</div>
     </div>
-    <div style="text-align:center">
-      <div class="score-badge" id="mosaic-score"></div>
-      <div style="font-size:.72rem;color:var(--txt3)">종합 점수 / 5</div>
-    </div>
+    <div class="footer-disc">본 사이트는 투자 조언이 아닙니다. 공개 정보 기반 분석용입니다.</div>
   </div>
-  <div class="signals-grid" id="signals-grid"></div>
-  <div class="verdict-box" id="verdict-box"></div>
-</section>
+</footer>
 
-<script src="app.js"></script>
+<button id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+<div id="solarTooltip"></div>
+
+<script>
+'use strict';
+
+var PAGES=['home','launches','sites','neutron','products','mosaic','compare',
+           'finance','stockanalysis','geo','posmap','targets','events','outlook',
+           'reports','about'];
+
+function showPage(id){
+  if(!document.getElementById('page-'+id)) return;
+  PAGES.forEach(function(p){
+    var el=document.getElementById('page-'+p);
+    var nav=document.getElementById('nav-'+p);
+    if(el) el.classList.toggle('active',p===id);
+    if(nav) nav.classList.toggle('active',p===id);
+  });
+  window.scrollTo(0,0);
+  if(id==='sites') setTimeout(initGlobe,80);
+}
+
+/* ── LIVE TICKER ── */
+function updateTicker(){
+  var el=document.getElementById('liveTxt'); if(!el) return;
+  var d=new Date();
+  var h=String(d.getUTCHours()).padStart(2,'0');
+  var m=String(d.getUTCMinutes()).padStart(2,'0');
+  var s=String(d.getUTCSeconds()).padStart(2,'0');
+  el.textContent='⚡ RKLB · 83번째 발사 성공 (Mar 5, 2026) · 다음 미션 #84 미정 · LC-1 NZ · '+h+':'+m+':'+s+' UTC';
+}
+setInterval(updateTicker,1000); updateTicker();
+
+/* ── SCROLL TOP ── */
+window.addEventListener('scroll',function(){
+  var btn=document.getElementById('scrollTop');
+  if(btn) btn.classList.toggle('vis',window.scrollY>400);
+});
+
+/* ════════════════════════════════════════════
+   SOLAR SYSTEM — Canvas 2D
+════════════════════════════════════════════ */
+var SC,SCX,SCY,SCW,SCH;
+var solarRot=0,solarDragStartX=0,solarTotalDrag=0,solarIsDrag=false;
+var solarHovered=null;
+var solarTip=document.getElementById('solarTooltip');
+var planetCache=[];
+
+var SOLAR_PAGES=[
+  {id:'home',        label:'🏠 HOME',         color:'#44aaff',orbit:0,  r:22,speed:0,   angle:0  },
+  {id:'launches',    label:'📋 발사아카이브', color:'#00d4ff',orbit:115,r:13,speed:.55, angle:0  },
+  {id:'sites',       label:'🗺️ 발사장',       color:'#0088cc',orbit:115,r:11,speed:.43, angle:120},
+  {id:'neutron',     label:'⚡ Neutron',       color:'#e8ff00',orbit:115,r:15,speed:.33, angle:240,ring:true},
+  {id:'products',    label:'🔩 제품군',        color:'#cc55ff',orbit:195,r:13,speed:.22, angle:0  },
+  {id:'mosaic',      label:'🧩 모자이크',      color:'#9933dd',orbit:195,r:11,speed:.18, angle:72 },
+  {id:'compare',     label:'⚖️ 경쟁비교',     color:'#00ff99',orbit:195,r:12,speed:.15, angle:144,ring:true},
+  {id:'finance',     label:'📉 재무차트',      color:'#00ffcc',orbit:195,r:11,speed:.12, angle:216},
+  {id:'stockanalysis',label:'📊 주가분석',     color:'#55ccff',orbit:195,r:10,speed:.10, angle:288},
+  {id:'geo',         label:'🌏 지정학',        color:'#ff7722',orbit:290,r:12,speed:.08, angle:0  },
+  {id:'posmap',      label:'🌐 포지셔닝',      color:'#ff9933',orbit:290,r:10,speed:.07, angle:40 },
+  {id:'targets',     label:'🎯 목표주가',      color:'#ffee00',orbit:290,r:11,speed:.06, angle:85 },
+  {id:'reports',     label:'📚 리포트',        color:'#ff6622',orbit:290,r:9, speed:.055,angle:130},
+  {id:'events',      label:'🗓️ 이벤트',       color:'#ffcc33',orbit:290,r:10,speed:.05, angle:180},
+  {id:'outlook',     label:'📈 전망',          color:'#ff8833',orbit:290,r:9, speed:.045,angle:225},
+  {id:'about',       label:'🧑 CEO',           color:'#ffdd55',orbit:290,r:12,speed:.04, angle:270,ring:true},
+];
+
+function initSolar(){
+  SC=document.getElementById('solarCanvas'); if(!SC) return;
+  resizeSolar();
+  window.addEventListener('resize',resizeSolar);
+
+  SC.addEventListener('mousedown',function(e){
+    solarIsDrag=false; solarDragStartX=e.clientX; solarTotalDrag=0;
+  });
+  SC.addEventListener('mousemove',function(e){
+    if(e.buttons===1){
+      var dx=e.clientX-solarDragStartX;
+      solarRot+=dx*.003; solarDragStartX=e.clientX;
+      solarTotalDrag+=Math.abs(dx); solarIsDrag=solarTotalDrag>4;
+      SC.style.cursor='grabbing';
+    } else {
+      SC.style.cursor='grab';
+      var pos=canvasPos(e,SC);
+      var hit=hitTest(pos.x,pos.y);
+      solarHovered=hit;
+      if(hit){
+        SC.style.cursor='pointer';
+        solarTip.style.display='block';
+        solarTip.style.left=(e.clientX+14)+'px';
+        solarTip.style.top=(e.clientY-32)+'px';
+        solarTip.textContent=hit.label+' — 클릭하면 이동';
+        solarTip.style.borderColor=hit.color;
+        solarTip.style.color=hit.color;
+      } else { solarTip.style.display='none'; }
+    }
+  });
+  SC.addEventListener('click',function(e){
+    if(solarIsDrag){solarIsDrag=false;return;}
+    var pos=canvasPos(e,SC);
+    var hit=hitTest(pos.x,pos.y);
+    if(hit&&hit.id) showPage(hit.id);
+  });
+  SC.addEventListener('mouseleave',function(){
+    solarTip.style.display='none'; solarHovered=null;
+  });
+
+  var touchPrevX=0,touchMoved=false;
+  SC.addEventListener('touchstart',function(e){touchPrevX=e.touches[0].clientX;touchMoved=false;},{passive:true});
+  SC.addEventListener('touchmove',function(e){
+    var dx=e.touches[0].clientX-touchPrevX;
+    solarRot+=dx*.004; touchPrevX=e.touches[0].clientX; touchMoved=Math.abs(dx)>3;
+  },{passive:true});
+  SC.addEventListener('touchend',function(e){
+    if(!touchMoved&&e.changedTouches[0]){
+      var pos=canvasPos(e.changedTouches[0],SC);
+      var hit=hitTest(pos.x,pos.y);
+      if(hit&&hit.id) showPage(hit.id);
+    }
+    touchMoved=false;
+  });
+
+  var lastTs=0;
+  function loop(ts){
+    requestAnimationFrame(loop);
+    var dt=Math.min((ts-lastTs)/1000,.05); lastTs=ts;
+    SOLAR_PAGES.forEach(function(p){if(p.orbit>0) p.angle+=p.speed*dt*60*.012;});
+    drawSolar(SC.getContext('2d'));
+  }
+  requestAnimationFrame(loop);
+}
+
+function resizeSolar(){
+  if(!SC) return;
+  var w=SC.parentElement.getBoundingClientRect().width||900;
+  SC.width=w; SC.height=600; SCW=w; SCH=600; SCX=w/2; SCY=300;
+}
+
+function canvasPos(e,canvas){
+  var rect=canvas.getBoundingClientRect();
+  return{x:(e.clientX-rect.left)*(canvas.width/rect.width),
+         y:(e.clientY-rect.top)*(canvas.height/rect.height)};
+}
+
+function hitTest(mx,my){
+  for(var i=planetCache.length-1;i>=0;i--){
+    var p=planetCache[i],dx=mx-p.x,dy=my-p.y;
+    if(dx*dx+dy*dy<=(p.r+10)*(p.r+10)) return p;
+  }
+  return null;
+}
+
+function h2rgb(hex){
+  return parseInt(hex.slice(1,3),16)+','+parseInt(hex.slice(3,5),16)+','+parseInt(hex.slice(5,7),16);
+}
+
+var STARS=null;
+function initStars(){
+  if(STARS) return;
+  STARS=[];
+  for(var i=0;i<500;i++) STARS.push({
+    x:Math.random()*3000,y:Math.random()*900,
+    r:Math.random()*.9+.1,a:Math.random()*.6+.2,
+    c:Math.random()<.2?'#aaccff':Math.random()<.5?'#fff8ee':'#ffffff'
+  });
+}
+
+function drawSolar(ctx){
+  if(!ctx||!SCW) return;
+  initStars();
+  var bg=ctx.createRadialGradient(SCX,SCY*.6,0,SCX,SCY,Math.max(SCW,SCH)*.85);
+  bg.addColorStop(0,'#02061c'); bg.addColorStop(.5,'#010310'); bg.addColorStop(1,'#000006');
+  ctx.fillStyle=bg; ctx.fillRect(0,0,SCW,SCH);
+
+  STARS.forEach(function(s){ctx.globalAlpha=s.a;ctx.fillStyle=s.c;ctx.beginPath();ctx.arc(s.x%SCW,s.y%SCH,s.r,0,Math.PI*2);ctx.fill();});
+  ctx.globalAlpha=1;
+
+  [[SCX*.4,SCY*.5,'rgba(0,80,200,.04)'],[SCX*1.6,SCY*.7,'rgba(100,0,200,.03)'],[SCX,SCY*1.5,'rgba(0,60,150,.03)']].forEach(function(n){
+    var g=ctx.createRadialGradient(n[0],n[1],0,n[0],n[1],200);
+    g.addColorStop(0,n[2]); g.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.fillStyle=g; ctx.fillRect(0,0,SCW,SCH);
+  });
+
+  var sc=Math.min(SCW,SCH)/700;
+  planetCache=[];
+
+  [[115,'rgba(0,180,255,.18)'],[195,'rgba(150,60,255,.14)'],[290,'rgba(255,100,30,.11)']].forEach(function(o){
+    ctx.beginPath(); ctx.arc(SCX,SCY,o[0]*sc,0,Math.PI*2);
+    ctx.strokeStyle=o[1]; ctx.lineWidth=1; ctx.setLineDash([4,10]); ctx.stroke(); ctx.setLineDash([]);
+  });
+
+  SOLAR_PAGES.forEach(function(p){
+    var ang=p.angle+solarRot, rad=ang*Math.PI/180;
+    var px=p.orbit===0?SCX:SCX+Math.cos(rad)*p.orbit*sc;
+    var py=p.orbit===0?SCY:SCY+Math.sin(rad)*p.orbit*sc;
+    var pr=p.r*sc;
+    var isHov=solarHovered&&solarHovered.id===p.id;
+    var rgb=h2rgb(p.color);
+
+    if(p.orbit>0){
+      for(var t=1;t<=20;t++){
+        var ta=((p.angle-t*p.speed*.012*3)+solarRot)*Math.PI/180;
+        ctx.globalAlpha=(1-t/20)*.14;
+        ctx.fillStyle=p.color;
+        ctx.beginPath(); ctx.arc(SCX+Math.cos(ta)*p.orbit*sc,SCY+Math.sin(ta)*p.orbit*sc,pr*.22,0,Math.PI*2); ctx.fill();
+      }
+      ctx.globalAlpha=1;
+    }
+
+    var gR=isHov?pr*3.5:pr*2.5;
+    var grd=ctx.createRadialGradient(px,py,0,px,py,gR);
+    grd.addColorStop(0,'rgba('+rgb+','+(isHov?.3:.15)+')'); grd.addColorStop(1,'rgba('+rgb+',0)');
+    ctx.fillStyle=grd; ctx.beginPath(); ctx.arc(px,py,gR,0,Math.PI*2); ctx.fill();
+
+    if(p.ring){
+      ctx.save(); ctx.translate(px,py); ctx.scale(1,.3);
+      ctx.beginPath(); ctx.arc(0,0,pr*1.9,0,Math.PI*2);
+      ctx.strokeStyle=p.color; ctx.globalAlpha=.45; ctx.lineWidth=pr*.6; ctx.stroke(); ctx.globalAlpha=1;
+      ctx.restore();
+    }
+
+    var bodyG=ctx.createRadialGradient(px-pr*.3,py-pr*.3,0,px,py,pr);
+    if(p.orbit===0){
+      bodyG.addColorStop(0,'#fffff0'); bodyG.addColorStop(.3,'#ffe060');
+      bodyG.addColorStop(.7,'#ff9900'); bodyG.addColorStop(1,'#cc3300');
+      var cg=ctx.createRadialGradient(px,py,0,px,py,pr*3);
+      cg.addColorStop(0,'rgba(255,200,60,.3)'); cg.addColorStop(.5,'rgba(255,120,0,.08)'); cg.addColorStop(1,'rgba(0,0,0,0)');
+      ctx.fillStyle=cg; ctx.beginPath(); ctx.arc(px,py,pr*3,0,Math.PI*2); ctx.fill();
+    } else {
+      var r3=rgb.split(',');
+      bodyG.addColorStop(0,'rgba('+rgb+',1)');
+      bodyG.addColorStop(.6,'rgba('+Math.floor(r3[0]*.5)+','+Math.floor(r3[1]*.5)+','+Math.floor(r3[2]*.5)+',1)');
+      bodyG.addColorStop(1,'rgba('+Math.floor(r3[0]*.1)+','+Math.floor(r3[1]*.1)+','+Math.floor(r3[2]*.1)+',1)');
+    }
+    ctx.shadowBlur=isHov?22:8; ctx.shadowColor=p.color;
+    ctx.fillStyle=bodyG; ctx.beginPath(); ctx.arc(px,py,pr,0,Math.PI*2); ctx.fill();
+    ctx.shadowBlur=0;
+
+    if(isHov){ctx.strokeStyle=p.color;ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(px,py,pr+2,0,Math.PI*2);ctx.stroke();}
+
+    ctx.font=(pr*1.1)+'px serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillStyle='#fff';
+    ctx.fillText(p.label.split(' ')[0],px,py);
+
+    var ltext=p.label.replace(/^[\S]+\s*/,''); if(!ltext) ltext=p.id;
+    ctx.font='bold '+Math.max(9,9*sc)+'px monospace';
+    var tw=ctx.measureText(ltext).width;
+    var lx=px,ly=py-pr-9*sc;
+    var alpha=isHov?1:(sc>.8?0.75:sc>.55?(sc-.55)/.25*0.75:0);
+    if(alpha>0){
+      ctx.globalAlpha=alpha;
+      ctx.fillStyle='rgba(2,4,14,.9)'; ctx.strokeStyle=p.color; ctx.lineWidth=1;
+      ctx.fillRect(lx-tw/2-5,ly-9,tw+10,17); ctx.strokeRect(lx-tw/2-5,ly-9,tw+10,17);
+      ctx.shadowBlur=5; ctx.shadowColor=p.color;
+      ctx.fillStyle=p.color; ctx.textAlign='center'; ctx.textBaseline='middle';
+      ctx.fillText(ltext,lx,ly-1);
+      ctx.shadowBlur=0; ctx.globalAlpha=1;
+    }
+    planetCache.push({id:p.id,label:p.label,color:p.color,x:px,y:py,r:pr});
+  });
+  ctx.textAlign='left'; ctx.textBaseline='alphabetic';
+}
+
+/* ════════════════════════════════════════════
+   3D GLOBE — Three.js
+════════════════════════════════════════════ */
+var GR,GS,GC,globeInited=false;
+var globeRotY=2.2,globeRotX=0.15,globeTRotY=2.2,globeTRotX=0.15;
+var globeDragging=false,globePrevX=0,globePrevY=0,globeAutoRot=true;
+
+var SITES={
+  lc1:{lat:-39.26,lon:177.87,color:0xe8ff00,label:'LC-1\nMāhia NZ',
+    stats:[{v:'LC-1A/B',l:'패드'},{v:'78+',l:'누적 발사'},{v:'2017',l:'운용개시'},{v:'SSO 98°',l:'주력 궤도'}],
+    desc:'뉴질랜드 마히아 반도. 남반구 전용 상업 발사장. SSO·극궤도 최적화.',
+    coord:'−39.26°N · 177.87°E'},
+  lc2:{lat:37.93,lon:-75.47,color:0x00d4ff,label:'LC-2\nWallops VA',
+    stats:[{v:'LC-2',l:'패드'},{v:'5+',l:'2024+ 발사'},{v:'2023',l:'운용개시'},{v:'MID/LEO',l:'주력 궤도'}],
+    desc:'미국 버지니아주 월롭스 섬. 방산·정부 미션 전담. USSF·NRO 우선.',
+    coord:'37.93°N · −75.47°E'},
+  lc3:{lat:37.87,lon:-75.51,color:0xff5c1a,label:'LC-3\nNeutron',
+    stats:[{v:'개발 중',l:'상태'},{v:'Q4 2026',l:'목표'},{v:'13,000kg',l:'페이로드'},{v:'재사용',l:'로켓'}],
+    desc:'Neutron 중형 재사용 로켓 전용 발사장. LC-2 인근.',
+    coord:'37.87°N · −75.51°E'},
+  hq:{lat:33.77,lon:-118.2,color:0xc084fc,label:'HQ\nLong Beach',
+    stats:[{v:'1,200+',l:'직원'},{v:'위성 제조',l:'주요 기능'},{v:'2020',l:'설립'},{v:'$300M+',l:'투자'}],
+    desc:'로켓랩 미국 본사. 우주선·엔진·SolAero 태양전지 제조 허브.',
+    coord:'33.77°N · −118.19°E'},
+};
+
+function selectSite(id){
+  ['lc1','lc2','lc3','hq'].forEach(function(k){
+    var t=document.getElementById('sp-tab-'+k);
+    if(t) t.classList.toggle('active',k===id);
+  });
+  var s=SITES[id]; if(!s) return;
+  var body=document.getElementById('sp-body'); if(!body) return;
+  var cv=s.color===0xe8ff00?'var(--y)':s.color===0x00d4ff?'var(--c)':s.color===0xff5c1a?'var(--o)':'var(--p)';
+  var rc='color:'+cv;
+  var html='<div style="margin-bottom:.6rem;font-family:monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;'+rc+'">'+s.label.replace('\n',' — ')+'</div>';
+  html+='<div class="sp-stat-grid">';
+  s.stats.forEach(function(st){html+='<div class="sp-stat"><div class="sp-stat-v" style="'+rc+'">'+st.v+'</div><div class="sp-stat-l">'+st.l+'</div></div>';});
+  html+='</div><p class="sp-desc">'+s.desc+'</p><div class="sp-coord">📍 '+s.coord+'</div>';
+  body.innerHTML=html;
+  if(globeInited){
+    globeTRotY=(-s.lon-90)*Math.PI/180;
+    globeTRotX=s.lat*Math.PI/180*-.35;
+    globeAutoRot=false; setTimeout(function(){globeAutoRot=true;},4000);
+  }
+}
+
+function initGlobe(){
+  if(typeof THREE==='undefined') return;
+  var mount=document.getElementById('globeMount'); if(!mount) return;
+  if(globeInited){
+    if(GR){var w=mount.clientWidth||800;GR.setSize(w,520);GC.aspect=w/520;GC.updateProjectionMatrix();}
+    return;
+  }
+  var w=mount.getBoundingClientRect().width||mount.clientWidth;
+  if(w<10){setTimeout(initGlobe,150);return;}
+  globeInited=true;
+  var H=520; mount.style.height=H+'px';
+  GS=new THREE.Scene();
+  GC=new THREE.PerspectiveCamera(45,w/H,.1,5000); GC.position.z=2.8;
+  GR=new THREE.WebGLRenderer({antialias:true,alpha:false});
+  GR.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
+  GR.setSize(w,H); GR.setClearColor(0x020508,1);
+  mount.innerHTML=''; mount.appendChild(GR.domElement);
+
+  var sun=new THREE.DirectionalLight(0xfff8ee,2.5); sun.position.set(5,3,5); GS.add(sun);
+  GS.add(new THREE.AmbientLight(0x112244,.9));
+  GS.add(new THREE.DirectionalLight(0x2244aa,.35).position.set(-5,-2,-3));
+
+  /* 별 */
+  var sp=new Float32Array(3000*3);
+  for(var i=0;i<3000;i++){var r=40+Math.random()*60,th=Math.random()*Math.PI*2,ph=Math.acos(2*Math.random()-1);sp[i*3]=r*Math.sin(ph)*Math.cos(th);sp[i*3+1]=r*Math.sin(ph)*Math.sin(th);sp[i*3+2]=r*Math.cos(ph);}
+  var sg=new THREE.BufferGeometry(); sg.setAttribute('position',new THREE.BufferAttribute(sp,3));
+  GS.add(new THREE.Points(sg,new THREE.PointsMaterial({color:0x99bbdd,size:.5,transparent:true,opacity:.8,sizeAttenuation:false})));
+
+  /* 지구 */
+  var earth=new THREE.Mesh(new THREE.SphereGeometry(1,96,96),
+    new THREE.MeshPhongMaterial({map:makeEarthTex(),specular:new THREE.Color(.15,.25,.4),shininess:18}));
+  earth.castShadow=true; GS.add(earth);
+
+  var cloud=new THREE.Mesh(new THREE.SphereGeometry(1.012,64,64),
+    new THREE.MeshPhongMaterial({map:makeCloudTex(),transparent:true,opacity:.48,depthWrite:false}));
+  GS.add(cloud);
+
+  GS.add(new THREE.Mesh(new THREE.SphereGeometry(1.09,32,32),
+    new THREE.MeshBasicMaterial({color:0x4488ff,transparent:true,opacity:.12,side:THREE.BackSide,blending:THREE.AdditiveBlending,depthWrite:false})));
+
+  /* 발사장 핀 */
+  var rings={};
+  Object.keys(SITES).forEach(function(id){
+    var s=SITES[id];
+    var phi=(90-s.lat)*Math.PI/180,theta=(s.lon+180)*Math.PI/180;
+    var vx=-Math.sin(phi)*Math.cos(theta),vy=Math.cos(phi),vz=Math.sin(phi)*Math.sin(theta);
+    var pos=new THREE.Vector3(vx*1.02,vy*1.02,vz*1.02);
+    var pin=new THREE.Mesh(new THREE.SphereGeometry(.028,16,16),new THREE.MeshBasicMaterial({color:s.color}));
+    pin.position.copy(pos); GS.add(pin);
+    var ring=new THREE.Mesh(new THREE.RingGeometry(.035,.065,32),
+      new THREE.MeshBasicMaterial({color:s.color,transparent:true,opacity:.7,side:THREE.DoubleSide,blending:THREE.AdditiveBlending,depthWrite:false}));
+    ring.position.copy(new THREE.Vector3(vx*1.005,vy*1.005,vz*1.005));
+    ring.lookAt(0,0,0); GS.add(ring); rings[id]=ring;
+    var lpts=[new THREE.Vector3(vx,vy,vz),new THREE.Vector3(vx*1.18,vy*1.18,vz*1.18)];
+    GS.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(lpts),
+      new THREE.LineBasicMaterial({color:s.color,transparent:true,opacity:.55})));
+    var cv2=document.createElement('canvas'); cv2.width=220; cv2.height=58;
+    var ctx2=cv2.getContext('2d');
+    var rr=(s.color>>16&255),gg=(s.color>>8&255),bb=(s.color&255);
+    ctx2.fillStyle='rgba(2,5,16,.93)'; ctx2.strokeStyle='rgba('+rr+','+gg+','+bb+',1)'; ctx2.lineWidth=1.5;
+    ctx2.beginPath(); ctx2.rect(3,3,214,52); ctx2.fill(); ctx2.stroke();
+    ctx2.fillStyle='rgba('+rr+','+gg+','+bb+',1)'; ctx2.fillRect(3,3,3,52);
+    ctx2.fillStyle='#ffffff'; ctx2.font='bold 16px monospace'; ctx2.textAlign='center'; ctx2.textBaseline='middle';
+    ctx2.shadowColor='rgba('+rr+','+gg+','+bb+',1)'; ctx2.shadowBlur=6;
+    var lines2=s.label.split('\n');
+    ctx2.fillText(lines2[0],110,lines2[1]?18:29);
+    if(lines2[1]){ctx2.font='12px monospace';ctx2.fillStyle='rgba('+rr+','+gg+','+bb+',.9)';ctx2.fillText(lines2[1],110,40);}
+    var lsp=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(cv2),transparent:true,depthWrite:false}));
+    lsp.scale.set(.55,.14,1); lsp.position.copy(new THREE.Vector3(vx*1.26,vy*1.26,vz*1.26)); GS.add(lsp);
+  });
+
+  window._globeEarth=earth; window._globeCloud=cloud; window._globeRings=rings;
+
+  var el2=GR.domElement; el2.style.cursor='grab';
+  el2.addEventListener('mousedown',function(e){
+    globeDragging=true; globePrevX=e.clientX; globePrevY=e.clientY; el2.style.cursor='grabbing';
+    window.addEventListener('mousemove',onGlobeDrag); window.addEventListener('mouseup',onGlobeUp,{once:true});
+  });
+  el2.addEventListener('touchstart',function(e){e.preventDefault();globePrevX=e.touches[0].clientX;globePrevY=e.touches[0].clientY;},{passive:false});
+  el2.addEventListener('touchmove',function(e){e.preventDefault();
+    globeTRotY+=(e.touches[0].clientX-globePrevX)*.006;
+    globeTRotX+=(e.touches[0].clientY-globePrevY)*.006;
+    globePrevX=e.touches[0].clientX; globePrevY=e.touches[0].clientY;
+    globeAutoRot=false; setTimeout(function(){globeAutoRot=true;},3000);
+  },{passive:false});
+  window.addEventListener('resize',function(){
+    if(!GR||!mount) return;
+    var w2=mount.clientWidth||800; GR.setSize(w2,520); GC.aspect=w2/520; GC.updateProjectionMatrix();
+  });
+
+  var gts0=0;
+  function gloop(ts){
+    requestAnimationFrame(gloop);
+    var dt=Math.min((ts-gts0)/1000,.05); gts0=ts;
+    globeRotY+=(globeTRotY-globeRotY)*.06; globeRotX+=(globeTRotX-globeRotX)*.06;
+    globeRotX=Math.max(-.8,Math.min(.8,globeRotX));
+    if(globeAutoRot&&!globeDragging) globeTRotY+=.0015;
+    if(window._globeEarth){window._globeEarth.rotation.y=globeRotY;window._globeEarth.rotation.x=globeRotX;}
+    if(window._globeCloud){window._globeCloud.rotation.y=globeRotY+ts*.000018;window._globeCloud.rotation.x=globeRotX;}
+    if(window._globeRings) Object.keys(SITES).forEach(function(id){
+      var rng=window._globeRings[id]; if(!rng) return;
+      rng.userData.pt=(rng.userData.pt||0)+.04;
+      rng.material.opacity=.35+Math.sin(rng.userData.pt)*.3;
+      var s=SITES[id],phi2=(90-s.lat)*Math.PI/180,theta2=(s.lon+180)*Math.PI/180;
+      var bx=-Math.sin(phi2)*Math.cos(theta2),by=Math.cos(phi2),bz=Math.sin(phi2)*Math.sin(theta2);
+      var cy=Math.cos(globeRotY),sy=Math.sin(globeRotY);
+      var rx=bx*cy+bz*sy,rz=-bx*sy+bz*cy;
+      var cx=Math.cos(globeRotX),sx=Math.sin(globeRotX);
+      rng.visible=by*sx+rz*cx>-.12;
+    });
+    GR.render(GS,GC);
+  }
+  gloop(0);
+}
+
+function onGlobeDrag(e){
+  globeTRotY+=(e.clientX-globePrevX)*.005; globeTRotX+=(e.clientY-globePrevY)*.005;
+  globePrevX=e.clientX; globePrevY=e.clientY; globeDragging=true; globeAutoRot=false;
+  setTimeout(function(){globeAutoRot=true;},3000);
+}
+function onGlobeUp(){
+  window.removeEventListener('mousemove',onGlobeDrag);
+  var el3=document.querySelector('#globeMount canvas'); if(el3) el3.style.cursor='grab';
+  setTimeout(function(){globeDragging=false;},50);
+}
+
+function makeEarthTex(){
+  var cv=document.createElement('canvas'); cv.width=2048; cv.height=1024;
+  var ctx=cv.getContext('2d');
+  var o=ctx.createLinearGradient(0,0,0,1024);
+  o.addColorStop(0,'#061528'); o.addColorStop(.5,'#0a2548'); o.addColorStop(1,'#061528');
+  ctx.fillStyle=o; ctx.fillRect(0,0,2048,1024);
+  function land(pts,fill){ctx.beginPath();ctx.moveTo(pts[0][0],pts[0][1]);for(var j=1;j<pts.length;j++)ctx.lineTo(pts[j][0],pts[j][1]);ctx.closePath();ctx.fillStyle=fill;ctx.fill();ctx.strokeStyle='rgba(60,140,60,.25)';ctx.lineWidth=1.2;ctx.stroke();}
+  var g1=ctx.createLinearGradient(0,0,0,1024);g1.addColorStop(0,'#3d8a3d');g1.addColorStop(.5,'#2d6e2d');g1.addColorStop(1,'#1a3a10');
+  var g2=ctx.createLinearGradient(0,0,0,1024);g2.addColorStop(0,'#4a9040');g2.addColorStop(.5,'#357530');g2.addColorStop(1,'#1a3a10');
+  land([[185,52],[418,48],[525,88],[580,138],[600,198],[572,278],[510,328],[420,368],[318,348],[218,298],[158,228],[148,153]],g1);
+  land([[298,388],[422,378],[492,418],[522,478],[512,558],[480,638],[432,698],[360,723],[288,678],[258,578],[268,478]],g2);
+  land([[758,92],[882,78],[958,88],[1000,113],[996,148],[958,163],[898,168],[838,153],[798,128]],g1);
+  land([[808,193],[942,183],[1018,208],[1058,258],[1058,348],[1028,448],[988,528],[938,573],[868,593],[798,568],[758,498],[748,388],[758,278]],g2);
+  land([[963,92],[1138,72],[1378,78],[1578,88],[1738,113],[1818,148],[1838,198],[1818,248],[1738,273],[1598,278],[1418,268],[1248,263],[1098,248],[988,218],[965,168]],g1);
+  land([[1103,268],[1188,258],[1233,283],[1253,358],[1228,428],[1178,463],[1118,453],[1088,378]],g2);
+  var auG=ctx.createLinearGradient(0,538,0,783);auG.addColorStop(0,'#c8843a');auG.addColorStop(1,'#a86830');
+  land([[1358,538],[1528,518],[1638,543],[1688,598],[1688,688],[1638,748],[1538,783],[1418,773],[1328,718],[1283,638],[1283,578]],auG);
+  land([[1518,173],[1553,163],[1563,186],[1546,213],[1520,203]],g1);
+  land([[1618,763],[1648,746],[1660,770],[1646,798],[1620,788]],g2);
+  var ag=ctx.createRadialGradient(1024,0,0,1024,0,240);ag.addColorStop(0,'rgba(230,245,255,.96)');ag.addColorStop(.7,'rgba(210,235,255,.4)');ag.addColorStop(1,'rgba(200,230,255,0)');
+  ctx.fillStyle=ag; ctx.fillRect(0,0,2048,240);
+  var atg=ctx.createRadialGradient(1024,1024,0,1024,1024,195);atg.addColorStop(0,'rgba(235,248,255,.96)');atg.addColorStop(.7,'rgba(215,240,255,.4)');atg.addColorStop(1,'rgba(215,240,255,0)');
+  ctx.fillStyle=atg; ctx.fillRect(0,838,2048,186);
+  return new THREE.CanvasTexture(cv);
+}
+
+function makeCloudTex(){
+  var cv=document.createElement('canvas'); cv.width=2048; cv.height=1024;
+  var ctx=cv.getContext('2d'); ctx.clearRect(0,0,2048,1024);
+  for(var i=0;i<220;i++){var x=Math.random()*2048,y=Math.random()*1024,w=55+Math.random()*185,h=12+Math.random()*35;ctx.fillStyle='rgba(255,255,255,'+(Math.random()*.38)+')';ctx.beginPath();ctx.ellipse(x,y,w,h,Math.random()*.5,0,Math.PI*2);ctx.fill();}
+  return new THREE.CanvasTexture(cv);
+}
+
+/* ── INIT ── */
+window.addEventListener('load',function(){
+  initSolar();
+  selectSite('lc1');
+  document.getElementById('nav-home').classList.add('active');
+});
+</script>
 </body>
 </html>
