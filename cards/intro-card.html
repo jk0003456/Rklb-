@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>서퍼베어 — 자기소개 카드뉴스</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&family=Bebas+Neue&display=swap');
+
+  :root {
+    --water:    #B8D4E8;
+    --brown:    #8B5E3C;
+    --red:      #FF3B3B;
+    --cream:    #FFF8E7;
+    --navy:     #1A1A2E;
+    --yellow:   #FFD600;
+    --deepblue: #0A1628;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0d0d0d;
+    font-family: 'Noto Sans KR', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    padding: 40px 20px;
+  }
+
+  h1.page-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 14px;
+    letter-spacing: 6px;
+    color: rgba(255,255,255,0.2);
+    margin-bottom: 8px;
+  }
+
+  .card {
+    width: 400px;
+    height: 400px;
+    position: relative;
+    overflow: hidden;
+    border-radius: 4px;
+    flex-shrink: 0;
+  }
+
+  /* grain overlay */
+  .card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.07'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 100;
+    mix-blend-mode: overlay;
+    opacity: 0.7;
+  }
+
+  .page-num {
+    position: absolute;
+    bottom: 16px;
+    right: 20px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 16px;
+    letter-spacing: 2px;
+    z-index: 10;
+  }
+
+  .card-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .card-group-label {
+    align-self: flex-start;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 13px;
+    letter-spacing: 3px;
+    color: rgba(255,255,255,0.18);
+    text-transform: uppercase;
+  }
+
+  /* ─── CARD 1: 타이틀 ─── */
+  #c1 {
+    background: var(--navy);
+  }
+
+  #c1 .backdrop-text {
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 210px;
+    line-height: 1;
+    letter-spacing: -8px;
+    color: rgba(255,255,255,0.04);
+    user-select: none;
+    white-space: nowrap;
+  }
+
+  #c1 .top-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(to right, var(--yellow), var(--red));
+  }
+
+  #c1 .bear-center {
+    position: absolute;
+    top: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 100px;
+    line-height: 1;
+    filter: drop-shadow(0 0 30px rgba(184,212,232,0.3));
+  }
+
+  #c1 .name-block {
+    position: absolute;
+    bottom: 60px;
+    left: 0;
+    right: 0;
+    text-align: center;
+  }
+
+  #c1 .name-en {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 52px;
+    letter-spacing: 8px;
+    color: #fff;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  #c1 .name-kr {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 6px;
+    color: var(--yellow);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+
+  #c1 .tag-row {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  #c1 .tag {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 10px;
+    letter-spacing: 1px;
+    border-radius: 2px;
+  }
+
+  #c1 .tag-water { background: rgba(184,212,232,0.15); color: var(--water); }
+  #c1 .tag-hold  { background: rgba(255,59,59,0.15);  color: var(--red); }
+  #c1 .tag-bear  { background: rgba(255,214,0,0.15);  color: var(--yellow); }
+
+  #c1 .page-num { color: rgba(255,255,255,0.2); }
+
+  /* ─── CARD 2: 출생의 비밀 ─── */
+  #c2 {
+    background: var(--cream);
+  }
+
+  #c2 .stamp {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 72px;
+    height: 72px;
+    border: 3px solid var(--red);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    transform: rotate(12deg);
+    opacity: 0.7;
+  }
+
+  #c2 .stamp-text {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 11px;
+    letter-spacing: 1px;
+    color: var(--red);
+    line-height: 1.3;
+    text-align: center;
+  }
+
+  #c2 .profile-header {
+    position: absolute;
+    top: 24px;
+    left: 24px;
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--brown);
+    opacity: 0.6;
+  }
+
+  #c2 .profile-card {
+    position: absolute;
+    top: 52px;
+    left: 20px;
+    right: 20px;
+    background: #fff;
+    border: 2px solid var(--navy);
+    box-shadow: 4px 4px 0 var(--navy);
+    padding: 18px 20px;
+    transform: rotate(-0.5deg);
+  }
+
+  #c2 .profile-row {
+    display: flex;
+    gap: 0;
+    margin-bottom: 10px;
+    font-size: 13px;
+    line-height: 1.4;
+  }
+
+  #c2 .profile-row:last-child { margin-bottom: 0; }
+
+  #c2 .pr-key {
+    min-width: 80px;
+    font-weight: 900;
+    color: var(--navy);
+    font-size: 11px;
+    letter-spacing: 0.5px;
+    padding-top: 1px;
+  }
+
+  #c2 .pr-val {
+    font-weight: 700;
+    color: #444;
+    font-size: 13px;
+    letter-spacing: -0.3px;
+  }
+
+  #c2 .pr-val strong { color: var(--red); font-weight: 900; }
+  #c2 .pr-val em { font-style: normal; background: var(--yellow); padding: 0 3px; }
+
+  #c2 .quote-bottom {
+    position: absolute;
+    bottom: 24px;
+    left: 24px;
+    right: 24px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--navy);
+    line-height: 1.65;
+    font-style: italic;
+    opacity: 0.65;
+  }
+
+  #c2 .page-num { color: rgba(26,26,46,0.25); }
+
+  /* ─── CARD 3: 타임라인 ─── */
+  #c3 {
+    background: var(--deepblue);
+  }
+
+  #c3 .section-title {
+    position: absolute;
+    top: 26px;
+    left: 28px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 4px;
+    color: rgba(255,255,255,0.15);
+  }
+
+  #c3 .timeline {
+    position: absolute;
+    top: 70px;
+    left: 28px;
+    right: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  #c3 .tl-item {
+    display: flex;
+    gap: 14px;
+    position: relative;
+    padding-bottom: 18px;
+  }
+
+  #c3 .tl-item:last-child { padding-bottom: 0; }
+
+  #c3 .tl-left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-shrink: 0;
+    width: 36px;
+  }
+
+  #c3 .tl-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+
+  #c3 .tl-line {
+    width: 1.5px;
+    flex: 1;
+    margin-top: 4px;
+    background: rgba(255,255,255,0.1);
+    min-height: 12px;
+  }
+
+  #c3 .tl-item:last-child .tl-line { display: none; }
+
+  #c3 .tl-year {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: rgba(255,255,255,0.3);
+    line-height: 1;
+    margin-top: 5px;
+    text-align: center;
+    flex-shrink: 0;
+    width: 36px;
+  }
+
+  #c3 .tl-content {
+    flex: 1;
+  }
+
+  #c3 .tl-title {
+    font-weight: 900;
+    font-size: 14px;
+    color: #fff;
+    letter-spacing: -0.3px;
+    line-height: 1.3;
+    margin-bottom: 3px;
+  }
+
+  #c3 .tl-desc {
+    font-size: 11.5px;
+    color: rgba(255,255,255,0.45);
+    line-height: 1.5;
+    font-weight: 400;
+  }
+
+  .tl-dot.yellow  { background: var(--yellow); }
+  .tl-dot.red     { background: var(--red); }
+  .tl-dot.water   { background: var(--water); }
+  .tl-dot.grey    { background: rgba(255,255,255,0.2); }
+
+  #c3 .current-badge {
+    display: inline-flex;
+    align-items: center;
+    background: rgba(255,59,59,0.2);
+    color: var(--red);
+    font-size: 9px;
+    font-weight: 900;
+    padding: 2px 7px;
+    border-radius: 2px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+
+  #c3 .page-num { color: rgba(255,255,255,0.2); }
+
+  /* ─── CARD 4: 철학 ─── */
+  #c4 {
+    background: var(--water);
+  }
+
+  #c4 .main-quote {
+    position: absolute;
+    top: 40px;
+    left: 28px;
+    right: 28px;
+  }
+
+  #c4 .mq-tag {
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: 3px;
+    color: var(--navy);
+    opacity: 0.5;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  #c4 .mq-text {
+    font-weight: 900;
+    font-size: 26px;
+    color: var(--navy);
+    line-height: 1.3;
+    letter-spacing: -1px;
+  }
+
+  #c4 .mq-text em {
+    font-style: normal;
+    -webkit-text-stroke: 1.5px var(--navy);
+    color: transparent;
+  }
+
+  #c4 .divider-h {
+    position: absolute;
+    top: 178px;
+    left: 28px;
+    right: 28px;
+    height: 2px;
+    background: rgba(26,26,46,0.12);
+  }
+
+  #c4 .beliefs {
+    position: absolute;
+    top: 196px;
+    left: 28px;
+    right: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  #c4 .belief-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--navy);
+    line-height: 1.45;
+  }
+
+  #c4 .belief-icon {
+    font-size: 16px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  #c4 .belief-text strong {
+    display: block;
+    font-size: 12px;
+    font-weight: 900;
+    color: var(--red);
+    margin-bottom: 1px;
+    letter-spacing: 0.5px;
+  }
+
+  #c4 .bear-bottom {
+    position: absolute;
+    bottom: 24px;
+    right: 20px;
+    font-size: 56px;
+    line-height: 1;
+    filter: drop-shadow(3px 4px 0 rgba(0,0,0,0.1));
+    transform: rotate(-6deg);
+  }
+
+  #c4 .page-num { color: rgba(26,26,46,0.25); }
+
+  /* ─── CARD 5: 공감존 ─── */
+  #c5 {
+    background: #1E1E1E;
+  }
+
+  #c5 .title-area {
+    position: absolute;
+    top: 26px;
+    left: 26px;
+    right: 26px;
+  }
+
+  #c5 .ta-label {
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: 4px;
+    color: var(--yellow);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  #c5 .ta-title {
+    font-weight: 900;
+    font-size: 22px;
+    color: #fff;
+    letter-spacing: -0.5px;
+    line-height: 1.25;
+  }
+
+  #c5 .checklist {
+    position: absolute;
+    top: 110px;
+    left: 26px;
+    right: 26px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  #c5 .check-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 14px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    cursor: default;
+  }
+
+  #c5 .check-item:first-child { border-top: 1px solid rgba(255,255,255,0.05); }
+
+  #c5 .check-box {
+    width: 20px;
+    height: 20px;
+    border: 2px solid;
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 11px;
+    font-weight: 900;
+  }
+
+  #c5 .check-box.yes { border-color: var(--red); color: var(--red); }
+  #c5 .check-box.no  { border-color: rgba(255,255,255,0.15); color: transparent; }
+
+  #c5 .check-text {
+    font-size: 13px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.75);
+    letter-spacing: -0.3px;
+  }
+
+  #c5 .check-item.active .check-text {
+    color: #fff;
+  }
+
+  #c5 .bottom-line {
+    position: absolute;
+    bottom: 28px;
+    left: 26px;
+    right: 26px;
+    font-size: 13px;
+    font-weight: 900;
+    color: var(--yellow);
+    text-align: center;
+    letter-spacing: -0.3px;
+  }
+
+  #c5 .page-num { color: rgba(255,255,255,0.2); }
+
+  /* ─── CARD 6: 미션 ─── */
+  #c6 {
+    background: var(--navy);
+  }
+
+  #c6 .big-num {
+    position: absolute;
+    top: 14px;
+    right: 20px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 160px;
+    color: rgba(255,255,255,0.03);
+    line-height: 1;
+    user-select: none;
+  }
+
+  #c6 .mission-header {
+    position: absolute;
+    top: 28px;
+    left: 28px;
+  }
+
+  #c6 .mh-label {
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: var(--yellow);
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  #c6 .mh-title {
+    font-weight: 900;
+    font-size: 28px;
+    color: #fff;
+    letter-spacing: -1px;
+    line-height: 1.2;
+  }
+
+  #c6 .mission-cards {
+    position: absolute;
+    top: 118px;
+    left: 28px;
+    right: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  #c6 .mc-item {
+    display: flex;
+    gap: 0;
+    border: 1.5px solid rgba(255,255,255,0.08);
+    overflow: hidden;
+    border-radius: 2px;
+  }
+
+  #c6 .mc-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    background: rgba(255,214,0,0.1);
+    color: var(--yellow);
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 46px;
+    letter-spacing: 1px;
+  }
+
+  #c6 .mc-text {
+    padding: 10px 14px;
+    font-size: 13px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.7);
+    display: flex;
+    align-items: center;
+    line-height: 1.4;
+    letter-spacing: -0.2px;
+  }
+
+  #c6 .bottom-msg {
+    position: absolute;
+    bottom: 28px;
+    left: 28px;
+    right: 28px;
+    background: rgba(255,59,59,0.12);
+    border-left: 3px solid var(--red);
+    padding: 10px 14px;
+    font-size: 12.5px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.65);
+    line-height: 1.55;
+    letter-spacing: -0.2px;
+  }
+
+  #c6 .page-num { color: rgba(255,255,255,0.2); }
+
+  /* ─── CARD 7: 시작 선언 ─── */
+  #c7 {
+    background: var(--water);
+  }
+
+  #c7 .top-accent {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: var(--navy);
+  }
+
+  #c7 .bear-hero {
+    position: absolute;
+    top: 22px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 80px;
+    line-height: 1;
+    filter: drop-shadow(3px 5px 0 rgba(0,0,0,0.12));
+  }
+
+  #c7 .hate-badge {
+    position: absolute;
+    top: 122px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--cream);
+    border: 2.5px solid var(--navy);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 3px;
+    color: var(--navy);
+    padding: 4px 18px;
+    white-space: nowrap;
+    box-shadow: 3px 3px 0 var(--navy);
+  }
+
+  #c7 .declaration {
+    position: absolute;
+    top: 176px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    padding: 0 28px;
+  }
+
+  #c7 .decl-main {
+    font-weight: 900;
+    font-size: 20px;
+    color: var(--navy);
+    letter-spacing: -0.8px;
+    line-height: 1.4;
+    margin-bottom: 8px;
+  }
+
+  #c7 .decl-sub {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--navy);
+    opacity: 0.5;
+    line-height: 1.6;
+    letter-spacing: -0.2px;
+  }
+
+  #c7 .follow-box {
+    position: absolute;
+    bottom: 42px;
+    left: 28px;
+    right: 28px;
+    background: var(--navy);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 18px;
+  }
+
+  #c7 .follow-handle {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 3px;
+    color: var(--yellow);
+  }
+
+  #c7 .follow-cta {
+    font-size: 11px;
+    font-weight: 900;
+    color: rgba(255,255,255,0.5);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  #c7 .page-num { color: rgba(26,26,46,0.25); }
+
+  /* ─── Caption ─── */
+  .caption-block {
+    width: 400px;
+    background: #161616;
+    border: 1px solid #252525;
+    padding: 24px;
+    border-radius: 4px;
+  }
+
+  .caption-block h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 14px;
+    letter-spacing: 4px;
+    color: var(--yellow);
+    margin-bottom: 16px;
+  }
+
+  .caption-block pre {
+    font-size: 13px;
+    line-height: 1.85;
+    white-space: pre-wrap;
+    color: rgba(255,255,255,0.65);
+    font-family: 'Noto Sans KR', sans-serif;
+  }
+
+  .caption-block .hashtags {
+    margin-top: 16px;
+    font-size: 12px;
+    color: #4A90D9;
+    line-height: 2.2;
+    font-weight: 700;
+  }
+</style>
+</head>
+<body>
+
+<h1 class="page-title">Suffer Bear · Card News · Introduction</h1>
+
+<!-- ───────── CARD 1 ───────── -->
+<div class="card-group">
+  <span class="card-group-label">Card 01 / Title</span>
+  <div class="card" id="c1">
+    <div class="backdrop-text">BEAR</div>
+    <div class="top-bar"></div>
+    <div class="bear-center">🐻</div>
+    <div class="name-block">
+      <div class="name-en">SUFFER BEAR</div>
+      <div class="name-kr">서퍼베어</div>
+      <div class="tag-row">
+        <span class="tag tag-water">💧 물속 거주 5년</span>
+        <span class="tag tag-hold">📉 코로나 매수</span>
+        <span class="tag tag-bear">🐻 개미</span>
+      </div>
+    </div>
+    <div class="page-num">1 / 7</div>
+  </div>
+</div>
+
+<!-- ───────── CARD 2 ───────── -->
+<div class="card-group">
+  <span class="card-group-label">Card 02 / Profile</span>
+  <div class="card" id="c2">
+    <div class="stamp">
+      <div class="stamp-text">STILL<br>HOLDING</div>
+    </div>
+    <div class="profile-header">공식 프로필</div>
+    <div class="profile-card">
+      <div class="profile-row">
+        <span class="pr-key">이름</span>
+        <span class="pr-val">서퍼베어 (Suffer Bear)</span>
+      </div>
+      <div class="profile-row">
+        <span class="pr-key">입수 시기</span>
+        <span class="pr-val"><strong>2020년 3월</strong> (코로나 폭락장)</span>
+      </div>
+      <div class="profile-row">
+        <span class="pr-key">현재 상태</span>
+        <span class="pr-val">익사 <em>직전</em> (5년째)</span>
+      </div>
+      <div class="profile-row">
+        <span class="pr-key">주력 종목</span>
+        <span class="pr-val">말할 수 없음 <strong>(수익률 때문)</strong></span>
+      </div>
+      <div class="profile-row">
+        <span class="pr-key">투자 전략</span>
+        <span class="pr-val">물타기 → 더 물타기 → 해탈</span>
+      </div>
+      <div class="profile-row">
+        <span class="pr-key">좌우명</span>
+        <span class="pr-val">"장기투자" (어쩔 수 없이)</span>
+      </div>
+    </div>
+    <div class="quote-bottom">
+      "그래도 이왕 물속인 거, 수영법은 가르쳐드릴게요"
+    </div>
+    <div class="page-num">2 / 7</div>
+  </div>
+</div>
+
+<!-- ───────── CARD 3 ───────── -->
+<div class="card-group">
+  <span class="card-group-label">Card 03 / Timeline</span>
+  <div class="card" id="c3">
+    <div class="section-title">TIMELINE</div>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-year">2020</div>
+        <div class="tl-left">
+          <div class="tl-dot yellow"></div>
+          <div class="tl-line"></div>
+        </div>
+        <div class="tl-content">
+          <div class="tl-title">"이게 기회다" 첫 매수</div>
+          <div class="tl-desc">코스피 1,400대. "바닥이겠지" 하고 풀매수</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">2021</div>
+        <div class="tl-left">
+          <div class="tl-dot yellow"></div>
+          <div class="tl-line"></div>
+        </div>
+        <div class="tl-content">
+          <div class="tl-title">잠깐 수면 위로 올라옴</div>
+          <div class="tl-desc">+30% 찍고 "더 오르겠지"라며 안 팜</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">2022</div>
+        <div class="tl-left">
+          <div class="tl-dot red"></div>
+          <div class="tl-line"></div>
+        </div>
+        <div class="tl-content">
+          <div class="tl-title">급격히 물 차오름</div>
+          <div class="tl-desc">금리 인상. 수익 전부 반납 + 추가 물타기 3회</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">2023</div>
+        <div class="tl-left">
+          <div class="tl-dot water"></div>
+          <div class="tl-line"></div>
+        </div>
+        <div class="tl-content">
+          <div class="tl-title">공부 시작 (뒤늦게)</div>
+          <div class="tl-desc">PER이 뭔지 처음 검색함. 2년 만에.</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">NOW</div>
+        <div class="tl-left">
+          <div class="tl-dot red"></div>
+        </div>
+        <div class="tl-content">
+          <div class="tl-title">
+            지식 공유 중
+            <span class="current-badge">LIVE</span>
+          </div>
+          <div class="tl-desc">나 같은 사람 안 나오게 하려고</div>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">3 / 7</div>
+  </div>
+</div>
+
+<!-- ───────── CARD 4 ───────── -->
+<div class="card-group">
+  <span class="card-group-label">Card 04 / Philosophy</span>
+  <div class="card" id="c4">
+    <div class="main-quote">
+      <div class="mq-tag">서퍼베어의 철학</div>
+      <div class="mq-text">
+        나는 투자자다<br>
+        <em>익사자</em>가 아니다<br>
+        (아직은)
+      </div>
+    </div>
+    <div class="divider-h"></div>
+    <div class="beliefs">
+      <div class="belief-item">
+        <span class="belief-icon">💧</span>
+        <div class="belief-text">
+          <strong>물속에서 배운 것들</strong>
+          손절의 타이밍은 항상 이미 지나간 뒤에 보임
+        </div>
+      </div>
+      <div class="belief-item">
+        <span class="belief-icon">📚</span>
+        <div class="belief-text">
+          <strong>뒤늦게 깨달은 것들</strong>
+          공부 먼저 했더라면... 아마 그래도 샀겠지
+        </div>
+      </div>
+      <div class="belief-item">
+        <span class="belief-icon">🤝</span>
+        <div class="belief-text">
+          <strong>그래도 하는 이유</strong>
+          같이 물속인 사람들이랑 같이 나오고 싶어서
+        </div>
+      </div>
+    </div>
+    <div class="bear-bottom">🐻</div>
+    <div class="page-num">4 / 7</div>
+  </div>
+</div>
+
+<!-- ───────── CARD 5 ───────── -->
+<div class="card-group">
+  <span class="card-group-label">Card 05 / Relate</span>
+  <div class="card" id="c5">
+    <div class="title-area">
+      <div class="ta-label">공감 체크리스트</div>
+      <div class="ta-title">이 중 하나라도<br>해당되면 팔로우</div>
+    </div>
+    <div class="checklist">
+      <div class="check-item active">
+        <div class="check-box yes">✓</div>
+        <span class="check-text">주식 시작하고 처음 들은 말이 "물 탔다"였다</span>
+      </div>
+      <div class="check-item active">
+        <div class="check-box yes">✓</div>
+        <span class="check-text">PER이 뭔지 모르고 산 종목이 있다</span>
+      </div>
+      <div class="check-item active">
+        <div class="check-box yes">✓</div>
+        <span class="check-text">손절 타이밍 놓치고 "장기투자"로 전환했다</span>
+      </div>
+      <div class="check-item active">
+        <div class="check-box yes">✓</div>
+        <span class="check-text">전문가 전망 믿었다가 당한 적 있다</span>
+      </div>
+      <div class="check-item">
+        <div class="check-box no">✓</div>
+        <span class="check-text" style="opacity:0.35">수익 중이다 (이 계정 필요 없음)</span>
+      </div>
+    </div>
+    <div class="bottom-line">
+      1개 이상? 여기가 맞아요. 환영합니다 👋
+    </div>
+    <div class="page-num">5 / 7</div>
+  </div>
+</div>
+
+<!-- ───────── CARD 6 ───────── -->
+<div class="card-group">
+  <span class="card-group-label">Card 06 / Mission</span>
+  <div class="card" id="c6">
+    <div class="big-num">6</div>
+    <div class="mission-header">
+      <div class="mh-label">앞으로 할 것들</div>
+      <div class="mh-title">주린이 생존<br>가이드</div>
+    </div>
+    <div class="mission-cards">
+      <div class="mc-item">
+        <div class="mc-num">01</div>
+        <div class="mc-text">주식 기본 용어 — PER, PBR, EPS, 배당... 쉽게 설명</div>
+      </div>
+      <div class="mc-item">
+        <div class="mc-num">02</div>
+        <div class="mc-text">서퍼베어 실수담 — 반면교사 실화 시리즈</div>
+      </div>
+      <div class="mc-item">
+        <div class="mc-num">03</div>
+        <div class="mc-text">차트 읽기 — 초보도 이해하는 기술적 분석 기초</div>
+      </div>
+      <div class="mc-item">
+        <div class="mc-num">04</div>
+        <div class="mc-text">심리 관리 — 손절 못 하는 이유, 과학적 설명</div>
+      </div>
+    </div>
+    <div class="bottom-msg">
+      전문가처럼 가르치는 게 아니라<br>
+      같이 물속에서 수영하는 사람이 알려드려요
+    </div>
+    <div class="page-num">6 / 7</div>
+  </div>
+</div>
+
+<!-- ───────── CARD 7 ───────── -->
+<div class="card-group">
+  <span class="card-group-label">Card 07 / Welcome</span>
+  <div class="card" id="c7">
+    <div class="top-accent"></div>
+    <div class="bear-hero">🐻</div>
+    <div class="hate-badge">HATE THIS</div>
+    <div class="declaration">
+      <div class="decl-main">
+        환영합니다, 동지여<br>
+        같이 나가봅시다
+      </div>
+      <div class="decl-sub">
+        매주 월·수·금 업로드<br>
+        저장해두면 나중에 생각납니다<br>
+        댓글에 "물 찼어요" 쓰면 반갑게 맞이할게요
+      </div>
+    </div>
+    <div class="follow-box">
+      <span class="follow-handle">@SUFFERBEAR_KR</span>
+      <span class="follow-cta">Follow ↗</span>
+    </div>
+    <div class="page-num">7 / 7</div>
+  </div>
+</div>
+
+<!-- ───────── Caption ───────── -->
+<div class="caption-block">
+  <h3>Instagram Caption</h3>
+  <pre>안녕, 나 서퍼베어야. 코로나 때부터 물속이야.
+
+2020년 봄, 아무것도 모르고 시작했다.
+PER이 뭔지도 모르고, 손절 타이밍도 몰랐고,
+"오르겠지"만 믿고 눌렀다.
+
+그 결과 5년째 물속 거주 중.
+
+근데 있잖아, 물속에서 5년 있다 보니까
+뭘 알아야 하는지는 알게 됐어.
+
+그래서 시작함.
+나 같은 사람 한 명이라도 줄여보려고.
+
+━━━━━━━━━━━━━━━━━━━━
+매주 월·수·금 — 주식 용어, 실수담, 생존 팁
+댓글에 "물 찼어요" 쓰면 반가워할 예정
+━━━━━━━━━━━━━━━━━━━━
+
+저장해두면 나중에 "왜 저장했지?" 할 거 없이
+진짜 필요한 날 찾게 됩니다 👇</pre>
+  <div class="hashtags">
+    #서퍼베어 #SufferBear #주린이 #주식공부
+    #개미투자자 #주식초보 #재테크 #물타기
+    #존버 #주식기초 #투자공부 #주식계정
+    #코로나주식 #주식일기 #개미
+  </div>
+</div>
+
+</body>
+</html>

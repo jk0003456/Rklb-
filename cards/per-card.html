@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>서퍼베어 — PER 카드뉴스</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&family=Bebas+Neue&display=swap');
+
+  :root {
+    --water:   #B8D4E8;
+    --brown:   #8B5E3C;
+    --red:     #FF3B3B;
+    --green:   #00C853;
+    --cream:   #FFF8E7;
+    --navy:    #1A1A2E;
+    --yellow:  #FFD600;
+    --deepblue:#0A1628;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #111;
+    font-family: 'Noto Sans KR', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    padding: 40px 20px;
+  }
+
+  h1.page-title {
+    color: #fff;
+    font-size: 14px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    opacity: 0.4;
+    margin-bottom: 8px;
+  }
+
+  /* ── 카드 공통 ── */
+  .card {
+    width: 400px;
+    height: 400px;
+    position: relative;
+    overflow: hidden;
+    border-radius: 4px;
+    flex-shrink: 0;
+  }
+
+  /* grain texture */
+  .card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 100;
+    mix-blend-mode: overlay;
+    opacity: 0.6;
+  }
+
+  .page-num {
+    position: absolute;
+    bottom: 16px;
+    right: 20px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 2px;
+    z-index: 10;
+  }
+
+  .card-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    border-radius: 2px;
+  }
+
+  /* ── CARD 1 — HOOK ── */
+  #card1 {
+    background: var(--water);
+  }
+
+  #card1 .bg-text {
+    position: absolute;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 200px;
+    color: rgba(255,255,255,0.12);
+    line-height: 1;
+    top: -20px;
+    left: -10px;
+    letter-spacing: -5px;
+    user-select: none;
+  }
+
+  #card1 .badge {
+    position: absolute;
+    top: 24px;
+    left: 24px;
+    background: var(--navy);
+    color: var(--yellow);
+  }
+
+  #card1 .main-text {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 28px 28px 48px;
+  }
+
+  #card1 .headline {
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 900;
+    font-size: 30px;
+    color: var(--navy);
+    line-height: 1.25;
+    letter-spacing: -1.5px;
+    margin-bottom: 12px;
+  }
+
+  #card1 .headline em {
+    font-style: normal;
+    background: var(--yellow);
+    padding: 0 4px;
+  }
+
+  #card1 .sub {
+    font-size: 13px;
+    color: var(--navy);
+    opacity: 0.6;
+    font-weight: 400;
+  }
+
+  #card1 .bear-emoji {
+    position: absolute;
+    top: 60px;
+    right: 20px;
+    font-size: 120px;
+    line-height: 1;
+    filter: drop-shadow(4px 6px 0px rgba(0,0,0,0.15));
+    transform: rotate(4deg);
+  }
+
+  #card1 .water-line {
+    position: absolute;
+    bottom: 110px;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: rgba(10, 22, 40, 0.18);
+  }
+  #card1 .water-line::before {
+    content: '〰〰〰〰〰〰〰〰〰〰〰〰〰〰〰〰〰';
+    position: absolute;
+    top: -10px;
+    left: 0;
+    font-size: 13px;
+    color: rgba(10,22,40,0.15);
+    white-space: nowrap;
+  }
+
+  #card1 .page-num { color: var(--navy); opacity: 0.4; }
+
+  /* ── CARD 2 — 스토리 ── */
+  #card2 {
+    background: var(--cream);
+  }
+
+  #card2 .tape {
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    transform: translateX(-50%) rotate(-1deg);
+    width: 80px;
+    height: 24px;
+    background: rgba(255, 214, 0, 0.55);
+    border-radius: 2px;
+    z-index: 5;
+  }
+
+  #card2 .postit {
+    position: absolute;
+    top: 32px;
+    left: 24px;
+    right: 24px;
+    background: var(--cream);
+    border: 2.5px solid var(--navy);
+    padding: 20px;
+    transform: rotate(-0.8deg);
+    box-shadow: 4px 4px 0 var(--navy);
+  }
+
+  #card2 .postit-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    color: var(--red);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  #card2 .postit-body {
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.65;
+    color: var(--navy);
+    letter-spacing: -0.3px;
+  }
+
+  #card2 .postit-body strong {
+    background: var(--yellow);
+    font-weight: 900;
+  }
+
+  #card2 .handwrite {
+    position: absolute;
+    bottom: 48px;
+    left: 28px;
+    right: 28px;
+    font-size: 13px;
+    color: var(--brown);
+    font-weight: 700;
+    font-style: italic;
+    opacity: 0.75;
+    line-height: 1.6;
+  }
+
+  #card2 .scribble {
+    position: absolute;
+    bottom: 38px;
+    right: 28px;
+    font-size: 28px;
+    transform: rotate(10deg);
+  }
+
+  #card2 .page-num { color: var(--navy); opacity: 0.4; }
+
+  /* ── CARD 3 — 정의 ── */
+  #card3 {
+    background: var(--navy);
+  }
+
+  #card3 .big-label {
+    position: absolute;
+    top: 28px;
+    left: 28px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 80px;
+    color: transparent;
+    -webkit-text-stroke: 2px var(--yellow);
+    line-height: 1;
+    letter-spacing: 4px;
+  }
+
+  #card3 .definition-box {
+    position: absolute;
+    top: 110px;
+    left: 28px;
+    right: 28px;
+    background: var(--yellow);
+    padding: 18px 20px;
+    transform: rotate(0.5deg);
+  }
+
+  #card3 .def-en {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 13px;
+    letter-spacing: 4px;
+    color: var(--navy);
+    margin-bottom: 6px;
+    opacity: 0.6;
+  }
+
+  #card3 .def-kr {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--navy);
+    line-height: 1.7;
+    letter-spacing: -0.2px;
+  }
+
+  #card3 .def-kr strong {
+    font-size: 16px;
+    font-weight: 900;
+  }
+
+  #card3 .formula {
+    position: absolute;
+    bottom: 56px;
+    left: 28px;
+    right: 28px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  #card3 .formula-item {
+    flex: 1;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.15);
+    padding: 10px 8px;
+    text-align: center;
+    border-radius: 2px;
+  }
+
+  #card3 .formula-item .fi-label {
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: rgba(255,255,255,0.4);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  #card3 .formula-item .fi-val {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    color: var(--yellow);
+    letter-spacing: 1px;
+  }
+
+  #card3 .formula-div {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    color: rgba(255,255,255,0.3);
+  }
+
+  #card3 .formula-eq {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    color: var(--red);
+  }
+
+  #card3 .page-num { color: rgba(255,255,255,0.3); }
+
+  /* ── CARD 4 — 비유 ── */
+  #card4 {
+    background: #FFF0E0;
+  }
+
+  #card4 .section-tag {
+    position: absolute;
+    top: 24px;
+    left: 24px;
+    background: var(--brown);
+    color: var(--cream);
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: 3px;
+    padding: 5px 12px;
+    text-transform: uppercase;
+  }
+
+  #card4 .analogy-title {
+    position: absolute;
+    top: 58px;
+    left: 24px;
+    right: 24px;
+    font-weight: 900;
+    font-size: 22px;
+    color: var(--navy);
+    letter-spacing: -0.8px;
+    line-height: 1.3;
+    padding-top: 10px;
+  }
+
+  #card4 .analogy-title span {
+    color: var(--red);
+  }
+
+  #card4 .chicken-box {
+    position: absolute;
+    top: 140px;
+    left: 24px;
+    right: 24px;
+    background: #fff;
+    border: 2.5px solid var(--navy);
+    padding: 16px 18px 16px 52px;
+    box-shadow: 3px 3px 0 var(--navy);
+    line-height: 1.75;
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--navy);
+    letter-spacing: -0.2px;
+  }
+
+  #card4 .chicken-icon {
+    position: absolute;
+    left: 14px;
+    top: 14px;
+    font-size: 28px;
+  }
+
+  #card4 .chicken-box strong {
+    color: var(--red);
+    font-weight: 900;
+  }
+
+  #card4 .arrow-down {
+    position: absolute;
+    bottom: 108px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 22px;
+    color: var(--navy);
+    opacity: 0.3;
+  }
+
+  #card4 .conclusion {
+    position: absolute;
+    bottom: 44px;
+    left: 24px;
+    right: 24px;
+    background: var(--navy);
+    color: var(--yellow);
+    padding: 12px 16px;
+    font-weight: 900;
+    font-size: 13.5px;
+    line-height: 1.55;
+    letter-spacing: -0.3px;
+  }
+
+  #card4 .page-num { color: var(--navy); opacity: 0.3; }
+
+  /* ── CARD 5 — 읽는법 ── */
+  #card5 {
+    background: var(--navy);
+  }
+
+  #card5 .title-block {
+    position: absolute;
+    top: 28px;
+    left: 28px;
+    right: 28px;
+  }
+
+  #card5 .title-block .eyebrow {
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: var(--yellow);
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  #card5 .title-block h2 {
+    font-weight: 900;
+    font-size: 26px;
+    color: #fff;
+    letter-spacing: -1px;
+    line-height: 1.2;
+  }
+
+  #card5 .scale {
+    position: absolute;
+    top: 120px;
+    left: 28px;
+    right: 28px;
+    height: 8px;
+    background: linear-gradient(to right, var(--green), #FFF176, var(--red));
+    border-radius: 4px;
+  }
+
+  #card5 .scale-labels {
+    position: absolute;
+    top: 136px;
+    left: 28px;
+    right: 28px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+
+  #card5 .scale-labels .low  { color: var(--green); }
+  #card5 .scale-labels .high { color: var(--red); }
+
+  #card5 .per-rows {
+    position: absolute;
+    top: 168px;
+    left: 28px;
+    right: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  #card5 .per-row {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    border: 1.5px solid rgba(255,255,255,0.1);
+    overflow: hidden;
+    border-radius: 2px;
+  }
+
+  #card5 .per-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 26px;
+    letter-spacing: 1px;
+    padding: 8px 14px;
+    min-width: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #card5 .per-num.low  { background: rgba(0,200,83,0.2); color: var(--green); }
+  #card5 .per-num.mid  { background: rgba(255,214,0,0.15); color: var(--yellow); }
+  #card5 .per-num.high { background: rgba(255,59,59,0.2); color: var(--red); }
+
+  #card5 .per-desc {
+    padding: 8px 14px;
+    font-size: 12px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.75);
+    display: flex;
+    align-items: center;
+    line-height: 1.45;
+    letter-spacing: -0.2px;
+  }
+
+  #card5 .bear-note {
+    position: absolute;
+    bottom: 44px;
+    left: 28px;
+    right: 28px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255,255,255,0.05);
+    border-left: 3px solid var(--red);
+    padding: 10px 14px;
+  }
+
+  #card5 .bear-note span {
+    font-size: 12px;
+    color: rgba(255,255,255,0.55);
+    font-style: italic;
+    font-weight: 400;
+    line-height: 1.5;
+  }
+
+  #card5 .bear-note strong {
+    color: var(--red);
+    font-weight: 700;
+    font-style: normal;
+  }
+
+  #card5 .page-num { color: rgba(255,255,255,0.25); }
+
+  /* ── CARD 6 — 서퍼베어 한마디 ── */
+  #card6 {
+    background: var(--deepblue);
+  }
+
+  #card6 .waves {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 160px;
+    background: linear-gradient(to top, rgba(0,80,160,0.5), transparent);
+  }
+
+  #card6 .waves::before {
+    content: '〰〰〰〰〰〰〰〰〰〰〰〰〰〰〰〰〰〰〰〰〰〰〰〰〰〰〰〰〰〰';
+    position: absolute;
+    top: 20px;
+    left: 0;
+    font-size: 18px;
+    color: rgba(100,180,255,0.2);
+    white-space: nowrap;
+    overflow: hidden;
+    width: 100%;
+  }
+
+  #card6 .waves::after {
+    content: '〰〰〰〰〰〰〰〰〰〰〰〰〰〰〰〰〰〰〰〰〰〰〰〰〰〰〰〰〰〰';
+    position: absolute;
+    top: 48px;
+    left: -20px;
+    font-size: 18px;
+    color: rgba(100,180,255,0.12);
+    white-space: nowrap;
+    overflow: hidden;
+    width: 120%;
+  }
+
+  #card6 .quote-mark {
+    position: absolute;
+    top: 24px;
+    left: 24px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 100px;
+    color: rgba(255,255,255,0.06);
+    line-height: 1;
+  }
+
+  #card6 .quote-text {
+    position: absolute;
+    top: 60px;
+    left: 32px;
+    right: 32px;
+    font-weight: 900;
+    font-size: 20px;
+    color: #fff;
+    line-height: 1.6;
+    letter-spacing: -0.5px;
+  }
+
+  #card6 .quote-text .highlight {
+    background: var(--red);
+    padding: 0 4px;
+    font-weight: 900;
+  }
+
+  #card6 .quote-text .soft {
+    font-size: 14px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.5);
+    display: block;
+    margin-top: 6px;
+  }
+
+  #card6 .signature {
+    position: absolute;
+    bottom: 50px;
+    right: 28px;
+    text-align: right;
+  }
+
+  #card6 .signature .sig-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 3px;
+    color: var(--yellow);
+  }
+
+  #card6 .signature .sig-sub {
+    font-size: 10px;
+    color: rgba(255,255,255,0.3);
+    letter-spacing: 1px;
+    font-weight: 400;
+  }
+
+  #card6 .bear-big {
+    position: absolute;
+    bottom: 40px;
+    left: 20px;
+    font-size: 72px;
+    line-height: 1;
+    filter: drop-shadow(0 0 20px rgba(0,80,160,0.8));
+    transform: rotate(-5deg);
+  }
+
+  #card6 .page-num { color: rgba(255,255,255,0.2); }
+
+  /* ── CARD 7 — 마무리 ── */
+  #card7 {
+    background: var(--water);
+  }
+
+  #card7 .top-strip {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 6px;
+    background: var(--navy);
+  }
+
+  #card7 .center-content {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 32px;
+    text-align: center;
+  }
+
+  #card7 .logo-bear {
+    font-size: 56px;
+    margin-bottom: 12px;
+    filter: drop-shadow(2px 4px 0 rgba(0,0,0,0.12));
+  }
+
+  #card7 .account-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    color: var(--navy);
+    letter-spacing: 4px;
+    margin-bottom: 4px;
+  }
+
+  #card7 .account-handle {
+    font-size: 13px;
+    color: var(--navy);
+    opacity: 0.5;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 24px;
+  }
+
+  #card7 .divider {
+    width: 40px;
+    height: 2px;
+    background: var(--navy);
+    opacity: 0.2;
+    margin-bottom: 24px;
+  }
+
+  #card7 .summary-box {
+    background: var(--navy);
+    color: var(--cream);
+    padding: 14px 20px;
+    width: 100%;
+    text-align: left;
+    margin-bottom: 16px;
+  }
+
+  #card7 .summary-box .sum-title {
+    font-size: 9px;
+    letter-spacing: 3px;
+    color: var(--yellow);
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  #card7 .summary-box ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  #card7 .summary-box li {
+    font-size: 12px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.8);
+    display: flex;
+    gap: 8px;
+    line-height: 1.4;
+  }
+
+  #card7 .summary-box li::before {
+    content: '→';
+    color: var(--yellow);
+    flex-shrink: 0;
+    font-weight: 900;
+  }
+
+  #card7 .next-ep {
+    font-size: 11px;
+    color: var(--navy);
+    font-weight: 700;
+    opacity: 0.5;
+    letter-spacing: 0.5px;
+  }
+
+  #card7 .save-hint {
+    position: absolute;
+    bottom: 18px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: 2px;
+    color: var(--navy);
+    opacity: 0.35;
+    text-transform: uppercase;
+  }
+
+  /* ── 캡션 섹션 ── */
+  .caption-block {
+    width: 400px;
+    background: #1a1a1a;
+    border: 1px solid #2a2a2a;
+    padding: 24px;
+    border-radius: 4px;
+    color: #eee;
+  }
+
+  .caption-block h3 {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--yellow);
+    margin-bottom: 16px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 14px;
+  }
+
+  .caption-block pre {
+    font-size: 13px;
+    line-height: 1.8;
+    white-space: pre-wrap;
+    color: rgba(255,255,255,0.7);
+    font-family: 'Noto Sans KR', sans-serif;
+  }
+
+  .caption-block .hashtags {
+    margin-top: 16px;
+    font-size: 12px;
+    color: #4A90D9;
+    line-height: 2;
+    font-weight: 700;
+  }
+
+  /* 카드 그룹 레이블 */
+  .card-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .card-group-label {
+    align-self: flex-start;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: rgba(255,255,255,0.2);
+    text-transform: uppercase;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 13px;
+  }
+</style>
+</head>
+<body>
+
+<h1 class="page-title">Suffer Bear · Card News · PER Series</h1>
+
+<!-- ───────── CARD 1 ───────── -->
+<div class="card-group">
+  <span class="card-group-label">Card 01 / Hook</span>
+  <div class="card" id="card1">
+    <div class="bg-text">PER</div>
+    <div class="bear-emoji">🐻</div>
+    <div class="water-line"></div>
+    <div class="badge card-label">📌 오늘의 용어</div>
+    <div class="main-text">
+      <div class="headline">
+        <em>PER</em> 모르고<br>주식 샀습니다
+      </div>
+      <div class="sub">저처럼 되지 마세요 (아마 이미 늦었겠지만)</div>
+    </div>
+    <div class="page-num">1 / 7</div>
+  </div>
+</div>
+
+<!-- ───────── CARD 2 ───────── -->
+<div class="card-group">
+  <span class="card-group-label">Card 02 / Story</span>
+  <div class="card" id="card2">
+    <div class="tape"></div>
+    <div class="postit">
+      <div class="postit-title">🗓 2020년 봄, 서퍼베어 일기</div>
+      <div class="postit-body">
+        "다들 주식 한다길래 나도 시작했다.<br>
+        <strong>PER이 뭔지</strong>도 모르고<br>
+        '오르겠지' 하고 눌렀다.<br><br>
+        그 종목은 아직도 내 계좌에 있다."
+      </div>
+    </div>
+    <div class="handwrite">
+      코로나 때 모두가 주식 전문가였던 시절...
+    </div>
+    <div class="scribble">😭</div>
+    <div class="page-num">2 / 7</div>
+  </div>
+</div>
+
+<!-- ───────── CARD 3 ───────── -->
+<div class="card-group">
+  <span class="card-group-label">Card 03 / Definition</span>
+  <div class="card" id="card3">
+    <div class="big-label">PER</div>
+    <div class="definition-box">
+      <div class="def-en">Price Earnings Ratio</div>
+      <div class="def-kr">
+        <strong>주가수익비율</strong><br>
+        "지금 이 주식이 얼마나 비싼지<br>
+        측정하는 지표"<br>
+        <br>
+        주가 ÷ 주당순이익(EPS) = PER
+      </div>
+    </div>
+    <div class="formula">
+      <div class="formula-item">
+        <div class="fi-label">주가</div>
+        <div class="fi-val">Stock Price</div>
+      </div>
+      <div class="formula-div">÷</div>
+      <div class="formula-item">
+        <div class="fi-label">주당순이익</div>
+        <div class="fi-val">EPS</div>
+      </div>
+      <div class="formula-eq">=</div>
+      <div class="formula-item">
+        <div class="fi-label">결과</div>
+        <div class="fi-val" style="color:#FF3B3B;">PER</div>
+      </div>
+    </div>
+    <div class="page-num">3 / 7</div>
+  </div>
+</div>
+
+<!-- ───────── CARD 4 ───────── -->
+<div class="card-group">
+  <span class="card-group-label">Card 04 / Analogy</span>
+  <div class="card" id="card4">
+    <div class="section-tag">쉽게 말하면</div>
+    <div class="analogy-title">
+      치킨집으로<br>이해하는 <span>PER</span>
+    </div>
+    <div class="chicken-box">
+      <span class="chicken-icon">🍗</span>
+      치킨집 가격 <strong>1억</strong>이고<br>
+      1년 순이익이 <strong>1,000만원</strong>이면<br>
+      본전 뽑는 데 <strong>10년</strong> 걸림<br><br>
+      이때 PER = <strong>10배</strong>
+    </div>
+    <div class="arrow-down">↓</div>
+    <div class="conclusion">
+      PER이 높을수록 → 지금 주가가 비싸다는 뜻<br>
+      PER이 낮을수록 → 상대적으로 저평가 가능성
+    </div>
+    <div class="page-num">4 / 7</div>
+  </div>
+</div>
+
+<!-- ───────── CARD 5 ───────── -->
+<div class="card-group">
+  <span class="card-group-label">Card 05 / How to Read</span>
+  <div class="card" id="card5">
+    <div class="title-block">
+      <div class="eyebrow">PER 읽는 법</div>
+      <h2>숫자가<br>말해주는 것들</h2>
+    </div>
+    <div class="scale"></div>
+    <div class="scale-labels">
+      <span class="low">저평가 ↓</span>
+      <span class="high">↑ 고평가</span>
+    </div>
+    <div class="per-rows">
+      <div class="per-row">
+        <div class="per-num low">~10</div>
+        <div class="per-desc">저평가 가능성.<br>근데 싼 데는 이유가 있을 수도</div>
+      </div>
+      <div class="per-row">
+        <div class="per-num mid">15~25</div>
+        <div class="per-desc">업종 평균 수준.<br>그냥 일반적인 주식</div>
+      </div>
+      <div class="per-row">
+        <div class="per-num high">50+</div>
+        <div class="per-desc">성장 기대감이 반영된 것.<br>틀리면 폭락각</div>
+      </div>
+    </div>
+    <div class="bear-note">
+      <span>
+        ⚠️ PER만 보고 사면 안 됨.<br>
+        <strong>서퍼베어가 증명함</strong> (코로나 때 PER 200짜리 삼)
+      </span>
+    </div>
+    <div class="page-num">5 / 7</div>
+  </div>
+</div>
+
+<!-- ───────── CARD 6 ───────── -->
+<div class="card-group">
+  <span class="card-group-label">Card 06 / Suffer Bear's Line</span>
+  <div class="card" id="card6">
+    <div class="waves"></div>
+    <div class="quote-mark">"</div>
+    <div class="quote-text">
+      PER 200짜리 샀을 때<br>
+      <span class="highlight">기업 가치를 믿었습니다</span><br><br>
+      지금도 믿습니다<br>
+      <span class="soft">...믿어야 팔 수가 없거든요</span>
+    </div>
+    <div class="bear-big">🐻</div>
+    <div class="signature">
+      <div class="sig-name">SUFFER BEAR</div>
+      <div class="sig-sub">5년차 물속 거주자</div>
+    </div>
+    <div class="page-num">6 / 7</div>
+  </div>
+</div>
+
+<!-- ───────── CARD 7 ───────── -->
+<div class="card-group">
+  <span class="card-group-label">Card 07 / Outro</span>
+  <div class="card" id="card7">
+    <div class="top-strip"></div>
+    <div class="center-content">
+      <div class="logo-bear">🐻</div>
+      <div class="account-name">SUFFER BEAR</div>
+      <div class="account-handle">@sufferbear_kr</div>
+      <div class="divider"></div>
+      <div class="summary-box">
+        <div class="sum-title">오늘 배운 것</div>
+        <ul>
+          <li>PER = 주가 ÷ 주당순이익</li>
+          <li>높을수록 비싸다 (고평가 가능성)</li>
+          <li>낮다고 무조건 좋은 게 아님</li>
+          <li>PER 하나만 보고 사면 안 됨 (경험담)</li>
+        </ul>
+      </div>
+      <div class="next-ep">다음 편 → PBR이 뭔지 아세요? (나도 몰랐음)</div>
+    </div>
+    <div class="save-hint">저장해두면 나중에 생각남</div>
+    <div class="page-num" style="color:rgba(26,26,46,0.3)">7 / 7</div>
+  </div>
+</div>
+
+<!-- ───────── 캡션 ───────── -->
+<div class="caption-block">
+  <h3>Instagram Caption</h3>
+  <pre>PER 모르고 주식 샀습니다 (저처럼 되지 마세요)
+
+코로나 때 "다들 산다니까" 하고 집어들었던
+PER 200짜리 종목... 아직도 보유 중입니다.
+
+PER이 뭔지 그때 알았더라면
+살았을까요? 아마 샀겠죠 어차피
+
+━━━━━━━━━━━━━━━━━━━━
+📌 PER 핵심 요약
+→ 주가 ÷ 주당순이익
+→ 높으면 비싸다 (고평가 가능성)
+→ 낮다고 무조건 좋은 건 아님
+━━━━━━━━━━━━━━━━━━━━
+
+여러분의 PER 첫 경험은요? 댓글로 알려주세요 👇
+저장해두면 나중에 PBR 설명할 때 같이 보기 좋아요</pre>
+  <div class="hashtags">
+    #주린이 #주식공부 #PER #주가수익비율 #서퍼베어
+    #개미투자자 #주식기초 #재테크 #투자공부 #주식초보
+    #주식용어 #SufferBear #물타기 #존버
+  </div>
+</div>
+
+</body>
+</html>
