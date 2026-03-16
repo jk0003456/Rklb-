@@ -1,0 +1,201 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 480" width="400" height="480">
+  <defs>
+    <!-- Background glow -->
+    <radialGradient id="bgGlow" cx="50%" cy="52%" r="52%">
+      <stop offset="0%"  stop-color="#F5F0C0" stop-opacity="0.85"/>
+      <stop offset="100%" stop-color="#B8D4E8" stop-opacity="0"/>
+    </radialGradient>
+    <!-- Body fur shading -->
+    <radialGradient id="bodyGrad" cx="50%" cy="35%" r="65%">
+      <stop offset="0%"  stop-color="#A07040"/>
+      <stop offset="100%" stop-color="#6B4020"/>
+    </radialGradient>
+    <!-- Head fur shading -->
+    <radialGradient id="headGrad" cx="48%" cy="38%" r="58%">
+      <stop offset="0%"  stop-color="#A87840"/>
+      <stop offset="100%" stop-color="#6B4020"/>
+    </radialGradient>
+    <!-- Cap shading -->
+    <radialGradient id="capGrad" cx="45%" cy="40%" r="60%">
+      <stop offset="0%"  stop-color="#EE3333"/>
+      <stop offset="100%" stop-color="#AA1111"/>
+    </radialGradient>
+    <!-- Tongue shading -->
+    <radialGradient id="tongueGrad" cx="50%" cy="40%" r="55%">
+      <stop offset="0%"  stop-color="#F8A0B0"/>
+      <stop offset="100%" stop-color="#E06878"/>
+    </radialGradient>
+    <!-- Nose shading -->
+    <radialGradient id="noseGrad" cx="38%" cy="35%" r="60%">
+      <stop offset="0%"  stop-color="#7AB4DC"/>
+      <stop offset="100%" stop-color="#3A70A0"/>
+    </radialGradient>
+    <!-- Eye white shading -->
+    <radialGradient id="eyeGrad" cx="40%" cy="35%" r="60%">
+      <stop offset="0%"  stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#D8E8F0"/>
+    </radialGradient>
+    <!-- scratch lines filter -->
+    <filter id="roughen">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.2" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+
+  <!-- ── BACKGROUND ── -->
+  <rect width="400" height="480" fill="#B8D4E8"/>
+  <rect width="400" height="480" fill="url(#bgGlow)"/>
+
+  <!-- Background scratch lines -->
+  <g stroke="#8FB8D0" stroke-width="1" opacity="0.35">
+    <line x1="20"  y1="30"  x2="55"  y2="10"/><line x1="35"  y1="60"  x2="5"   y2="40"/>
+    <line x1="60"  y1="20"  x2="80"  y2="50"/><line x1="10"  y1="80"  x2="40"  y2="100"/>
+    <line x1="340" y1="20"  x2="380" y2="45"/><line x1="360" y1="55"  x2="395" y2="30"/>
+    <line x1="370" y1="80"  x2="395" y2="105"/><line x1="330" y1="60"  x2="395" y2="70"/>
+    <line x1="15"  y1="400" x2="50"  y2="380"/><line x1="30"  y1="430" x2="5"  y2="455"/>
+    <line x1="360" y1="400" x2="395" y2="420"/><line x1="340" y1="445" x2="390" y2="460"/>
+    <line x1="100" y1="15"  x2="130" y2="5"/> <line x1="280" y1="10"  x2="310" y2="25"/>
+    <line x1="150" y1="460" x2="170" y2="475"/><line x1="230" y1="465" x2="260" y2="478"/>
+  </g>
+
+  <!-- ── BODY ── -->
+  <!-- Main body oval -->
+  <ellipse cx="200" cy="375" rx="135" ry="115" fill="url(#bodyGrad)" filter="url(#roughen)"/>
+  <!-- Body fur texture lines -->
+  <g stroke="#6B4020" stroke-width="1" opacity="0.18">
+    <path d="M155 290 Q160 310 158 330"/><path d="M165 285 Q172 308 170 332"/>
+    <path d="M245 290 Q240 312 242 334"/><path d="M254 288 Q248 310 250 336"/>
+    <path d="M200 275 Q202 300 200 325"/><path d="M185 278 Q188 302 186 328"/>
+    <path d="M215 278 Q212 302 214 330"/>
+  </g>
+  <!-- Body highlight -->
+  <ellipse cx="185" cy="335" rx="55" ry="40" fill="#C09050" opacity="0.18"/>
+
+  <!-- ── LEFT ARM ── -->
+  <ellipse cx="82" cy="360" rx="42" ry="28" fill="#7A5030" transform="rotate(-28,82,360)" filter="url(#roughen)"/>
+  <!-- Left claws -->
+  <path d="M48 345 Q40 334 47 326" stroke="#5A3520" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <path d="M57 338 Q50 326 58 319" stroke="#5A3520" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <path d="M67 334 Q63 321 71 316" stroke="#5A3520" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+
+  <!-- ── RIGHT ARM ── -->
+  <ellipse cx="318" cy="368" rx="42" ry="28" fill="#7A5030" transform="rotate(22,318,368)" filter="url(#roughen)"/>
+  <!-- Right claws -->
+  <path d="M350 355 Q359 344 353 336" stroke="#5A3520" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <path d="M358 365 Q368 355 363 347" stroke="#5A3520" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <path d="M354 375 Q365 368 362 358" stroke="#5A3520" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+
+  <!-- ── HEAD ── -->
+  <ellipse cx="200" cy="215" rx="112" ry="105" fill="url(#headGrad)" filter="url(#roughen)"/>
+  <!-- Head highlight -->
+  <ellipse cx="178" cy="185" rx="60" ry="48" fill="#C09050" opacity="0.15"/>
+  <!-- Cheek puff left -->
+  <ellipse cx="112" cy="240" rx="32" ry="26" fill="#9A6838" opacity="0.5"/>
+  <!-- Cheek puff right -->
+  <ellipse cx="288" cy="240" rx="32" ry="26" fill="#9A6838" opacity="0.5"/>
+
+  <!-- ── EARS ── -->
+  <!-- Left ear -->
+  <circle cx="115" cy="135" r="42" fill="#7A5030" filter="url(#roughen)"/>
+  <circle cx="115" cy="135" r="26" fill="#5A3520"/>
+  <!-- Right ear -->
+  <circle cx="285" cy="135" r="42" fill="#7A5030" filter="url(#roughen)"/>
+  <circle cx="285" cy="135" r="26" fill="#5A3520"/>
+
+  <!-- ── YELLOW EAR TAG (right ear) ── -->
+  <g transform="rotate(18,302,118)">
+    <rect x="292" y="110" width="30" height="22" rx="4" fill="#FFD600"/>
+    <rect x="292" y="110" width="30" height="22" rx="4" fill="none" stroke="#C8A800" stroke-width="1.5"/>
+    <text x="307" y="125" font-family="Arial" font-size="9" font-weight="bold" fill="#8B6000" text-anchor="middle">★</text>
+  </g>
+
+  <!-- ── CAP ── -->
+  <!-- Cap dome -->
+  <path d="M 105 158 Q 108 90 200 80 Q 290 70 294 160" fill="url(#capGrad)" filter="url(#roughen)"/>
+  <!-- Cap dome shading -->
+  <path d="M 130 148 Q 140 100 200 92 Q 260 85 272 150" fill="#EE4444" opacity="0.3"/>
+  <!-- Cap brim (backwards - sticks out to back/right) -->
+  <path d="M 270 155 Q 310 148 330 158 Q 332 170 310 172 Q 285 175 268 168 Z" fill="#BB1111"/>
+  <!-- Cap brim underside shadow -->
+  <path d="M 272 163 Q 308 157 326 165 Q 325 170 308 170 Q 285 174 270 168 Z" fill="#880000" opacity="0.4"/>
+  <!-- Cap seam line -->
+  <path d="M 200 82 Q 202 130 200 160" stroke="#BB1111" stroke-width="1.5" fill="none" opacity="0.6"/>
+  <!-- Cap button -->
+  <circle cx="200" cy="82" r="7" fill="#CC1111"/>
+  <circle cx="200" cy="82" r="4" fill="#AA0000"/>
+  <!-- Cap dots decoration -->
+  <circle cx="183" cy="115" r="3.5" fill="#AA0000" opacity="0.6"/>
+  <circle cx="200" cy="108" r="3.5" fill="#AA0000" opacity="0.6"/>
+  <circle cx="217" cy="115" r="3.5" fill="#AA0000" opacity="0.6"/>
+
+  <!-- ── EYES ── -->
+  <!-- Left eye socket -->
+  <ellipse cx="162" cy="210" rx="33" ry="30" fill="#4A3010" opacity="0.2"/>
+  <!-- Left eye white -->
+  <ellipse cx="162" cy="207" rx="30" ry="28" fill="url(#eyeGrad)"/>
+  <!-- Left iris/pupil -->
+  <circle cx="164" cy="213" r="11" fill="#1A1A2E"/>
+  <circle cx="164" cy="213" r="7"  fill="#0A0A18"/>
+  <!-- Left eye shine -->
+  <circle cx="168" cy="208" r="4"  fill="white" opacity="0.9"/>
+  <circle cx="159" cy="218" r="2"  fill="white" opacity="0.5"/>
+  <!-- Left droopy eyelid -->
+  <path d="M 132 196 Q 162 184 192 196" fill="#8B5E3C" opacity="0.85"/>
+  <path d="M 133 198 Q 162 187 191 198" fill="#7A5030" opacity="0.6"/>
+
+  <!-- Right eye socket -->
+  <ellipse cx="238" cy="210" rx="33" ry="30" fill="#4A3010" opacity="0.2"/>
+  <!-- Right eye white -->
+  <ellipse cx="238" cy="207" rx="30" ry="28" fill="url(#eyeGrad)"/>
+  <!-- Right iris/pupil -->
+  <circle cx="236" cy="213" r="11" fill="#1A1A2E"/>
+  <circle cx="236" cy="213" r="7"  fill="#0A0A18"/>
+  <!-- Right eye shine -->
+  <circle cx="240" cy="208" r="4"  fill="white" opacity="0.9"/>
+  <circle cx="231" cy="218" r="2"  fill="white" opacity="0.5"/>
+  <!-- Right droopy eyelid -->
+  <path d="M 208 196 Q 238 184 268 196" fill="#8B5E3C" opacity="0.85"/>
+  <path d="M 209 198 Q 238 187 267 198" fill="#7A5030" opacity="0.6"/>
+
+  <!-- ── NOSE ── -->
+  <ellipse cx="200" cy="248" rx="24" ry="17" fill="url(#noseGrad)"/>
+  <!-- Nose highlight -->
+  <ellipse cx="192" cy="243" rx="7"  ry="5"  fill="#AAD4F0" opacity="0.6"/>
+  <!-- Nose shadow -->
+  <ellipse cx="200" cy="254" rx="18" ry="8"  fill="#2A5070" opacity="0.25"/>
+  <!-- Nose line (center divide) -->
+  <path d="M 200 256 Q 196 264 192 268 M 200 256 Q 204 264 208 268" stroke="#5A3020" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+
+  <!-- ── MOUTH ── -->
+  <!-- Mouth interior/dark -->
+  <path d="M 168 268 Q 184 284 200 286 Q 216 284 232 268 Q 220 302 200 304 Q 180 302 168 268 Z" fill="#3A1810"/>
+  <!-- Mouth opening arc -->
+  <path d="M 168 266 Q 184 282 200 284 Q 216 282 232 266" stroke="#3A1810" stroke-width="2" fill="none"/>
+  <!-- Upper lip area -->
+  <path d="M 170 265 Q 185 274 200 276 Q 215 274 230 265" fill="#7A4828" opacity="0.4"/>
+
+  <!-- ── TONGUE ── -->
+  <ellipse cx="200" cy="302" rx="26" ry="20" fill="url(#tongueGrad)" filter="url(#roughen)"/>
+  <!-- Tongue center line -->
+  <line x1="200" y1="284" x2="200" y2="318" stroke="#D06878" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+  <!-- Tongue tip highlight -->
+  <ellipse cx="196" cy="294" rx="8" ry="6" fill="#FBBCC8" opacity="0.5"/>
+  <!-- Tongue drool drop -->
+  <path d="M 200 320 Q 198 330 200 336 Q 202 330 200 320 Z" fill="#AAC8E0" opacity="0.6"/>
+
+  <!-- ── HATE THIS BADGE ── -->
+  <rect x="140" y="415" width="120" height="38" rx="3" fill="white"/>
+  <rect x="140" y="415" width="120" height="38" rx="3" fill="none" stroke="#333333" stroke-width="2.5"/>
+  <text x="200" y="440" font-family="'Arial Black', Arial, sans-serif" font-size="15" font-weight="900" fill="#1A1A2E" text-anchor="middle" letter-spacing="2">HATE THIS</text>
+
+  <!-- ── SWEAT DROPS (stress indicators) ── -->
+  <g fill="#8FB8D8" opacity="0.7">
+    <path d="M 90 175 Q 88 165 92 160 Q 96 165 90 175 Z"/>
+    <path d="M 80 195 Q 77 183 82 177 Q 87 183 80 195 Z"/>
+    <path d="M 310 172 Q 308 162 312 157 Q 316 162 310 172 Z"/>
+    <path d="M 322 192 Q 319 180 324 174 Q 329 180 322 192 Z"/>
+  </g>
+
+  <!-- ── FOREHEAD VEIN (stress) ── -->
+  <path d="M 155 165 L 163 158 L 158 152 L 166 145" stroke="#CC2020" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+</svg>
