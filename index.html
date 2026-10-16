@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rocket Lab Mosaic Archive</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="hero">
+      <div class="hero-inner">
+        <h1>Rocket Lab Mosaic Archive</h1>
+        <p>
+          로켓랩 관련 정량/정성 자료를 아카이빙하고,
+          모자이크 이론으로 가설을 구성·검증하는 리서치 워크스페이스.
+        </p>
+        <div id="quickStats" class="quick-stats" aria-label="핵심 지표 요약"></div>
+      </div>
+    </header>
+
+    <nav class="sitemap panel">
+      <h2>사이트맵</h2>
+      <ul>
+        <li><a href="#archiveSection">자료 아카이브</a></li>
+        <li><a href="#mosaicSection">모자이크 보드</a></li>
+        <li><a href="#financialSection">재무지표 및 주가추이</a></li>
+        <li><a href="#roadmapSection">Neutron 로드맵 & 백로그</a></li>
+        <li><a href="#contractsSection">진행중 계약 및 입찰</a></li>
+        <li><a href="#acquisitionsSection">인수 회사 및 moat</a></li>
+      </ul>
+    </nav>
+
+    <main class="layout">
+      <section class="panel" id="archiveSection">
+        <div class="panel-header">
+          <h2>자료 아카이브</h2>
+          <div class="actions">
+            <button id="sortReliability">신뢰도 순 정렬</button>
+            <button id="sortRecent">최신순 정렬</button>
+          </div>
+        </div>
+        <p class="hint">
+          SEC 공시, 실적 발표, 발사 로그, 공급망 뉴스, 특허 등 증거 단위를 저장합니다.
+        </p>
+        <div class="toolbar" aria-label="아카이브 필터">
+          <input id="archiveSearch" type="search" placeholder="제목/인사이트 검색" />
+          <select id="tagFilter">
+            <option value="all">전체 태그</option>
+          </select>
+        </div>
+        <div id="archiveList" class="archive-list"></div>
+      </section>
+
+      <section class="panel" id="mosaicSection">
+        <h2>모자이크 보드</h2>
+        <p class="hint">
+          증거를 교차 연결해 가설 신뢰도를 계산합니다.
+          <br />
+          예시: “중형 발사 수요 증가로 Neutron 상업화 가속”
+        </p>
+
+        <div class="hypothesis-card">
+          <h3 id="hypothesisTitle"></h3>
+          <p id="hypothesisDescription"></p>
+          <div class="score-wrap">
+            <span>가설 신뢰도</span>
+            <strong id="confidenceScore"></strong>
+          </div>
+          <div id="linkedEvidence" class="linked-evidence"></div>
+        </div>
+      </section>
+
+      <section class="panel" id="financialSection">
+        <div class="panel-header">
+          <h2>재무지표 및 주가추이</h2>
+          <span class="chip">연도별 추이</span>
+        </div>
+        <p class="hint">연도별 매출액과 매출원가율을 10-K/공식 IR 자료 기준으로 선형 그래프로 표시합니다.</p>
+
+        <div class="line-charts">
+          <article class="line-card">
+            <h3>연도별 매출액 (USD million)</h3>
+            <div id="revenueLineChart" class="line-chart" aria-label="연도별 매출액 선형 그래프"></div>
+          </article>
+
+          <article class="line-card">
+            <h3>연도별 매출원가율 (COGS Ratio %)</h3>
+            <div id="cogsLineChart" class="line-chart" aria-label="연도별 매출원가율 선형 그래프"></div>
+          </article>
+
+          <article class="line-card">
+            <h3>일렉트론 연도별 평균 발사 주기 (일)</h3>
+            <div id="electronCadenceLineChart" class="line-chart" aria-label="일렉트론 발사 주기 선형 그래프"></div>
+          </article>
+        </div>
+
+        <p id="financialSource" class="source-note"></p>
+
+        <div class="stock-trend">
+          <h3>RKLB 월별 종가(USD)</h3>
+          <div id="stockBars" class="bars"></div>
+        </div>
+      </section>
+
+      <section class="panel" id="roadmapSection">
+        <div class="panel-header">
+          <h2>Neutron 개발 일정 & 최신 백로그</h2>
+          <span class="chip" id="backlogChip"></span>
+        </div>
+        <p class="hint">Neutron 일정은 Rocket Lab 공식 사이트 로드맵 기준으로 정리했습니다.</p>
+        <div id="neutronRoadmapList" class="roadmap-list"></div>
+        <p class="source-note">
+          출처: Rocket Lab Neutron 페이지 / Rocket Lab 최근 실적 발표 자료
+        </p>
+      </section>
+
+      <section class="panel" id="contractsSection">
+        <div class="panel-header">
+          <h2>현재 진행중인 계약 및 입찰</h2>
+          <span id="activeCount" class="chip"></span>
+        </div>
+        <p class="hint">정부/상업 발주 건의 단계와 예상 금액을 트래킹합니다.</p>
+        <div id="contractsList" class="contracts-list"></div>
+      </section>
+
+      <section class="panel" id="acquisitionsSection">
+        <div class="panel-header">
+          <h2>지금까지 인수한 회사와 moat</h2>
+          <span class="chip">전략 자산 맵</span>
+        </div>
+        <p class="hint">인수 목적과 핵심 경쟁우위를 모자이크 관점으로 정리합니다.</p>
+        <div id="acquisitionsList" class="acquisitions-list"></div>
+      </section>
+    </main>
+
+    <button id="backToTop" class="back-to-top" aria-label="맨 위로 이동">↑</button>
+
+    <script src="app.js"></script>
+  </body>
+</html>
